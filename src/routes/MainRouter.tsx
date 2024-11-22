@@ -12,11 +12,9 @@ const MainRouter = () => {
   return (
     <div className="wrapper">
       <div className="main_wrapper">
-        <div className="main_content">
-          <RouterProvider router={router}>
-            <ScrollToTop />
-          </RouterProvider>
-        </div>
+        <RouterProvider router={router}>
+          <ScrollToTop />
+        </RouterProvider>
       </div>
     </div>
   );

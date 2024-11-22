@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { emojiList1 } from "../assets/emojis/emojiList1";
 import { emojiList2 } from "../assets/emojis/emojiList2";
 import { emojiList3 } from "../assets/emojis/emojiList3";
@@ -10,6 +12,9 @@ type Emoji = { id: number; emoji: string };
 
 const MainPage = () => {
   // const navigate = useNavigate();
+
+  const [isClicked, setIsClicked] = useState<boolean>(false);
+  const [name, setName] = useState<string>("");
 
   const emojiList = [
     ...emojiList1,
@@ -51,11 +56,57 @@ const MainPage = () => {
 
     return selectedEmojis;
   };
+
+  const handleButtonClick = () => {
+    setIsClicked(true);
+  };
+
+  const onChange = (e: any) => {
+    setName(e.target.value);
+  };
+
   return (
-    <>
-      <div style={{ color: "black" }}>Main Page</div>
-      {getRandomEmojis(5)}
-    </>
+    <div className="main_content">
+      <div className="title-wrapper">
+        <div className="title" style={{ paddingBottom: "14px" }}>
+          2025년
+        </div>
+        {isClicked ? (
+          <div className="title_sub">{name}에게 일어날 5가지</div>
+        ) : (
+          <div className="title_sub">내게 일어날 좋은 일들!</div>
+        )}
+      </div>
+      {/* <div className="title_sub">5가지!</div> */}
+      {/* <img src="/assets/images/emo1.jpeg" /> */}
+      {isClicked ? (
+        <>
+          <div className="emoji">{getRandomEmojis(5)}</div>
+        </>
+      ) : (
+        <div style={{ paddingTop: "40px" }}>
+          <div>
+            <input
+              className="simple-input"
+              type="text"
+              placeholder="이름"
+              onChange={onChange}
+            />
+          </div>
+          <div style={{ paddingTop: "40px" }}>
+            <button
+              className="cute-button"
+              disabled={name.length < 1}
+              onClick={() => {
+                handleButtonClick();
+              }}
+            >
+              알아보자✨
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
