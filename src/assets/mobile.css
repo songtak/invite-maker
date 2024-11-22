@@ -22,6 +22,9 @@
     width: 100vw;
     height: 100vh;
   }
+
+  .page_wrapper {
+  }
   .title-wrapper {
     padding-bottom: 80px;
   }
@@ -38,6 +41,10 @@
     /* padding-bottom: 30px; */
     /* width: 730px; */
     text-align: center;
+  }
+  .chat {
+    padding-left: 8vw;
+    padding-right: 8vw;
   }
   .emoji {
     font-size: 40px;
@@ -95,5 +102,18 @@
   .simple-input:focus {
     border-color: #000000;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  }
+
+  .child {
+    position: absolute;
+    top: 54%;
+    left: 50%;
+    bottom: 24px;
+    transform: translate(-50%, -50%);
+    height: fit-content;
+  }
+
+  .pb16 {
+    padding-bottom: 16px;
   }
 }

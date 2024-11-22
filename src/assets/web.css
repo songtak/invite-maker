@@ -33,6 +33,10 @@
     /* width: 730px; */
     text-align: center;
   }
+  .chat {
+    padding-left: 25vw;
+    padding-right: 25vw;
+  }
   .emoji {
     font-size: 40px;
     letter-spacing: 16px;

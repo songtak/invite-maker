@@ -1,53 +1,115 @@
-const HOST_API = `${import.meta.env.VITE_HOST_API}`;
+import axios from "axios";
+import CryptoJS from "crypto-js";
 
-import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
+const DEC_KEY = `${import.meta.env.VITE_DEC_KEY}`;
 
-// Axios 인스턴스 생성
-const axiosInstance = axios.create({
-  baseURL: "http://your-api-url.com", // API 기본 URL
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+// const OPENAI_ENDPOINT = "https://api.openai.com/v1/chat/completions";
 
-// 요청 인터셉터 추가
-axiosInstance.interceptors.request.use(
-  // (config: AxiosRequestConfig) => {
-  (config: any) => {
-    // 여기서 로컬 스토리지 등에서 토큰을 가져옵니다.
-    const token = localStorage.getItem("access_token");
+export const getResponseFromGPT = async (prompt: any, setChatData: any) => {
+  const api_key =
+    "/Ll851pdxEJb+rBDNWF9QpeZH5T8h+xguI0Nc6HnRnm6u+5XerLBNp9e7ybzmQtF3xiQDRsuub49FGs1y1VOhW3g37r/BHEk+eF65RcJPuxbNtJqpFlDZ/pWSPLJ5ILj37in9LZxYtGa1Wlxf0TOca+6oveIcuLjO2hkHBhY0yiLfzoavpGg+PpW+fWUvX1zT9RpHEbBqI0DLcs3JM74+Az4ajrCrya7C0/Q6PFJB9s=";
 
-    if (token) {
-      // 토큰이 있으면 요청 헤더에 추가합니다.
-      config.headers = {
-        ...config.headers,
-        Authorization: `Bearer ${token}`,
-      };
-    }
+  function decodeAppKey(): string {
+    const key = CryptoJS.enc.Utf8.parse(DEC_KEY);
+    const decrypted = CryptoJS.AES.decrypt(api_key, key, {
+      mode: CryptoJS.mode.ECB,
+      padding: CryptoJS.pad.Pkcs7,
+    });
 
-    return config;
-  },
-  (error: AxiosError) => {
-    // 요청 에러 처리
-    return Promise.reject(error);
+    return decrypted.toString(CryptoJS.enc.Utf8); // UTF-8 형식으로 반환
   }
-);
+  const OPENAI_ENDPOINT = "https://api.openai.com/v1/chat/completions";
 
-// 응답 인터셉터 추가
-axiosInstance.interceptors.response.use(
-  (response: AxiosResponse) => {
-    // 응답 데이터를 그대로 반환합니다.
-    return response;
-  },
-  (error: AxiosError) => {
-    // 응답 에러 처리, 예를 들어 HTTP 상태 코드가 401이면 로그인 페이지로 리다이렉트
-    if (error.response?.status === 401) {
-      // 로그인 상태가 만료되었거나 유효하지 않을 때의 처리
-      console.error("Unauthorized! Redirecting to login.");
-      // 여기서 로그인 페이지로 리다이렉트하는 로직을 추가할 수 있습니다.
-    }
-    return Promise.reject(error);
+  const response = await fetch(OPENAI_ENDPOINT, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${decodeAppKey()}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: "gpt-4",
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      stream: true,
+      max_tokens: 1000,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`OpenAI API error: ${response.statusText}`);
   }
-);
 
-export { axiosInstance };
+  const reader = response.body?.getReader();
+  const decoder = new TextDecoder("utf-8");
+
+  let accumulatedText = ""; // 지금까지의 전체 텍스트
+  let previousLength = 0; // 이전 텍스트 길이
+
+  while (reader) {
+    const { value, done } = await reader.read();
+    if (done) break;
+
+    const chunk = decoder.decode(value); // UTF-8로 디코딩
+    const lines = chunk.split("\n"); // 줄 단위로 나누기
+    for (const line of lines) {
+      if (line.trim() === "" || line.startsWith("data: [DONE]")) {
+        continue; // 빈 줄 또는 완료 신호 무시
+      }
+
+      if (line.startsWith("data: ")) {
+        const json = line.replace("data: ", "").trim();
+        try {
+          const parsed = JSON.parse(json);
+          const delta = parsed.choices[0]?.delta?.content || ""; // 새로 생성된 텍스트
+          if (delta) {
+            accumulatedText += delta; // 전체 텍스트에 추가
+            const newContent = accumulatedText.slice(previousLength); // 이전 길이 이후의 새 텍스트만 추출
+            previousLength = accumulatedText.length; // 업데이트된 길이 저장
+            setChatData(newContent); // 새로운 텍스트만 전달
+          }
+        } catch (error) {
+          console.error("Error parsing JSON:", error);
+        }
+      }
+    }
+  }
+
+  // const response = await axios.post(
+  //   OPENAI_ENDPOINT,
+  //   {
+  //     messages: [
+  //       {
+  //         role: "user",
+  //         content: prompt,
+  //       },
+  //     ],
+  //     stream: true,
+  //     max_tokens: 4096,
+  //     model: "gpt-4",
+  //     // prompt: prompt,
+  //     // max_tokens: 150000,
+  //     // model: "gpt-4o",
+  //     // model: "gpt-3.5-turbo",
+  //     // model: "gpt-3.5-turbo-instruct",
+  //   },
+  //   {
+  //     headers: {
+  //       Authorization: `Bearer ${decodeAppKey()}`,
+  //       "Content-Type": "application/json",
+  //     },
+  //     responseType: "stream", // 스트리밍 활성화
+  //   }
+  // );
+
+  console.log("response", response);
+
+  return response;
+  // return new Promise<void>((resolve, reject) => {
+  //   response.data.on("end", () => resolve());
+  //   response.data.on("error", (error: any) => reject(error));
+  // });
+};
