@@ -1,0 +1,21 @@
+@media screen and (max-width: 1023px) {
+  .wrapper {
+    text-align: center;
+    width: 100%;
+    overflow: visible;
+    min-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(255, 255, 255);
+  }
+
+  .main_page_content {
+    margin-top: 20px;
+  }
+
+  .main_wrapper {
+    width: 100vw;
+    height: 100vh;
+  }
+}

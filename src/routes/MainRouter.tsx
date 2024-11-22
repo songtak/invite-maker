@@ -2,15 +2,23 @@ import { RouterProvider } from "react-router-dom";
 
 import useDynamicRoutes from "@libs/hooks/useDynamicRoutes";
 import ScrollToTop from "@libs/ScrollToTop";
+import "../assets/web.css";
+import "../assets/mobile.css";
 
 /** 기본 라우터 */
 const MainRouter = () => {
   const router = useDynamicRoutes();
 
   return (
-    <RouterProvider router={router}>
-      <ScrollToTop />
-    </RouterProvider>
+    <div className="wrapper">
+      <div className="main_wrapper">
+        <div className="main_content">
+          <RouterProvider router={router}>
+            <ScrollToTop />
+          </RouterProvider>
+        </div>
+      </div>
+    </div>
   );
 };
 
