@@ -1,4 +1,3 @@
-import axios from "axios";
 import CryptoJS from "crypto-js";
 
 const DEC_KEY = `${import.meta.env.VITE_DEC_KEY}`;

@@ -12,6 +12,7 @@ const MainRouter = () => {
   return (
     <div className="wrapper">
       <div className="main_wrapper">
+        {/* @ts-ignore */}
         <RouterProvider router={router}>
           <ScrollToTop />
         </RouterProvider>
