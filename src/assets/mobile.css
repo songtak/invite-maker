@@ -11,7 +11,7 @@
   }
   .main_content {
     /* height: 100%; */
-    padding-top: 80px;
+    padding-top: 40px;
   }
 
   .main_page_content {
@@ -26,7 +26,7 @@
   .page_wrapper {
   }
   .title-wrapper {
-    padding-bottom: 80px;
+    /* padding-bottom: 80px; */
   }
   .title {
     padding-top: 16px;
@@ -45,6 +45,12 @@
   .chat {
     padding-left: 8vw;
     padding-right: 8vw;
+    height: 54vh;
+    overflow-y: auto;
+    height: calc(100vh - 55vh);
+  }
+  .lh {
+    line-height: 1.6;
   }
   .emoji {
     font-size: 40px;
@@ -105,15 +111,35 @@
   }
 
   .child {
-    position: absolute;
+    /* z-index: -1; */
+    /* position: absolute;
     top: 54%;
     left: 50%;
     bottom: 24px;
     transform: translate(-50%, -50%);
+    height: 100vh; */
+  }
+  .child_p {
+    /* margin-top: 80vh; */
     height: fit-content;
   }
 
   .pb16 {
     padding-bottom: 16px;
+  }
+
+  .songtak {
+    position: absolute;
+    top: 96vh;
+    left: 50%;
+    bottom: 24px;
+    transform: translate(-50%, -50%);
+  }
+  .jw {
+    overflow-y: auto;
+    max-height: 78vh;
+  }
+  .jw::-webkit-scrollbar {
+    display: none; /* 스크롤바 숨김 */
   }
 }

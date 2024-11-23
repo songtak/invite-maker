@@ -23,6 +23,11 @@ const authRoutes: RouteObject[] = [
     errorElement: <ErrorPage />,
   },
   {
+    path: "/invite-maker",
+    element: <MainPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
     path: "/auth",
     element: <AuthTestPage />,
     errorElement: <ErrorPage />,

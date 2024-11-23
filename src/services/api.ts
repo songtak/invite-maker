@@ -2,8 +2,6 @@ import CryptoJS from "crypto-js";
 
 const DEC_KEY = `${import.meta.env.VITE_DEC_KEY}`;
 
-// const OPENAI_ENDPOINT = "https://api.openai.com/v1/chat/completions";
-
 export const getResponseFromGPT = async (prompt: any, setChatData: any) => {
   const api_key =
     "/Ll851pdxEJb+rBDNWF9QpeZH5T8h+xguI0Nc6HnRnm6u+5XerLBNp9e7ybzmQtF3xiQDRsuub49FGs1y1VOhW3g37r/BHEk+eF65RcJPuxbNtJqpFlDZ/pWSPLJ5ILj37in9LZxYtGa1Wlxf0TOca+6oveIcuLjO2hkHBhY0yiLfzoavpGg+PpW+fWUvX1zT9RpHEbBqI0DLcs3JM74+Az4ajrCrya7C0/Q6PFJB9s=";

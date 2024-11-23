@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CryptoJS from "crypto-js";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { getResponseFromGPT } from "../services/api";
+import ReactGA from "react-ga4";
 
 import { emojiList1 } from "../assets/emojis/emojiList1";
 import { emojiList2 } from "../assets/emojis/emojiList2";
@@ -14,6 +15,7 @@ type Emoji = { id: number; emoji: string };
 
 const MainPage = () => {
   // const navigate = useNavigate();
+  const location = useLocation();
 
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
@@ -31,6 +33,11 @@ const MainPage = () => {
     ...emojiList5,
     ...emojiList6,
   ];
+
+  ReactGA.send({
+    hitType: "pageview",
+    page: location.pathname, // useRouter를 사용하여, pathname값을 가져옵니다.
+  });
 
   const getRandomEmojis = (count: number): string[] => {
     // 1. 모든 ID를 배열로 추출
@@ -65,11 +72,18 @@ const MainPage = () => {
   };
   // http://localhost:5173/
   const handleButtonClick = async () => {
+    ReactGA.event({
+      category: "start_button",
+      action: "click",
+      label: "알아보기",
+      value: 1,
+    });
+
     await setIsClicked(true);
     const emoji = getRandomEmojis(5);
     setEmojis(emoji);
     await getResponseFromGPT(
-      `${emoji} 이 이모지 5개가 나왔는데 이걸 토대로 2025년 운세를 해석해줘 무조건 긍정적인 방향으로 부탁해!`,
+      `친구 ${name}의 이모지가 이렇게 ${emoji} 5개가 나왔는데 이걸 토대로 2025년 운세를 해석해줘 무조건 긍정적인 방향으로 부탁해! 내용은 이모지(이모지 이름) 내용서술 줄바꿈 다음 이모지... 그리고 마지막엔 정리! 그리고 친구에게 말하듯 다정한 말투로 부탁하고 친구의 이름도 불러줘!`,
       // `${emojis} 이 이모지 5개가 나왔는데 이걸 토대로 2025년 운세를 해석해줘 무조건 긍정적인 방향으로 부탁해! 그리고 친구한테 말하듯 서술적으로!`
       (chunk: any) => {
         setChatData((prev) => prev + chunk); // 스트리밍 데이터 추가
@@ -123,7 +137,10 @@ const MainPage = () => {
           </div>
           {!isJw ? (
             isClicked ? (
-              <div className="title_sub">{name}에게 일어날 좋은 일들!</div>
+              <div style={{ marginBottom: 16 }}>
+                <div className="title_sub">{name}에게</div>
+                <div className="title_sub">일어날 좋은 일들!</div>
+              </div>
             ) : (
               <div className="title_sub">내게 일어날 좋은 일들!</div>
             )
@@ -136,7 +153,7 @@ const MainPage = () => {
         {isClicked && !isJw && (
           <>
             <div className="emoji">{emojis}</div>
-            <p className="chat">{chatData}</p>
+            <p className="chat lh">{chatData}</p>
           </>
         )}
         {!isClicked && !isJw && (
@@ -148,6 +165,7 @@ const MainPage = () => {
                 onKeyUp={(e) => {
                   onCheckEnter(e);
                 }}
+                maxLength={15}
                 placeholder="이름"
                 onChange={onChange}
               />
@@ -168,74 +186,78 @@ const MainPage = () => {
       </div>
       {!isClicked ? (
         !isJw ? (
-          <div>
+          <div className="child">
             <p
-              className="child"
+              className="child_p"
+              style={{ cursor: "pointer" }}
               onClick={() => {
                 setIsJw(true);
+                ReactGA.event({
+                  category: "is_jw_button",
+                  action: "click",
+                  label: "쨰웅",
+                  value: 1,
+                });
               }}
             >
               혹시? 김재웅이신가요?
             </p>
           </div>
         ) : (
-          <div>
-            <>
-              <div className="pb16">🥰 2025년 째웅이 운세 해석</div>
-              <div className="pb16">
-                {" "}
-                💘 (하트, 사랑과 깊이) 사랑이 2025년엔 더 깊어지고, 너와
-                상대방이 서로에게 더 든든한 존재가 될 거야. 작은 일상에서도
-                서로를 배려하고 웃게 만들어주는 순간들이 많아질 거야. 네가 주는
-                따뜻함이 더 커져서, 사랑이 너의 하루하루를 진짜 특별하게 채울
-                거야. 💖
+          <div className="jw">
+            <div className="pb16 lh" style={{ fontWeight: 700, fontSize: 18 }}>
+              🥰 2025년 째웅이 운세 해석
+            </div>
+            <div className="pb16 lh">
+              💘 (하트, 사랑과 깊이) 사랑이 2025년엔 더 깊어지고, 너와 상대방이
+              서로에게 더 든든한 존재가 될 거야. 작은 일상에서도 서로를 배려하고
+              웃게 만들어주는 순간들이 많아질 거야. 네가 주는 따뜻함이 더
+              커져서, 사랑이 너의 하루하루를 진짜 특별하게 채울 거야. 💖
+            </div>
+            <div className="pb16 lh">
+              💵 (돈, 풍요와 기회) 올해는 네가 했던 노력들이 하나둘 결실을 맺고,
+              재물적인 부분에서도 안정과 풍요를 가져다줄 해야. 새로운 기회가
+              찾아오거나, 너도 몰랐던 숨은 행운이 돈이 되어 나타날 거야. 💰
+              "내가 이걸 잘했다!" 싶을 만큼 뿌듯한 결과들을 보게 될 거야.
+              계획했던 걸 차근차근 실행해봐. 너 진짜 멋진 해를 만들 거야!
+            </div>
+            <div className="pb16 lh">
+              🌳 (나무, 성장과 안정) 나무는 네 삶의 뿌리를 의미해. 2025년은 네가
+              그 뿌리를 더 깊이 내리고, 삶을 안정적으로 만들어가는 해가 될 거야.
+              너의 노력과 끈기가 차곡차곡 쌓이면서, 네가 정말 "이건 나다!" 하고
+              자랑할 수 있는 걸 만들어낼 거야. 그리고, 자연 속에서 쉼과 힐링도
+              누릴 수 있는 순간들이 많아질 거야. 🌱
+            </div>
+            <div className="pb16 lh">
+              🌊 (물결, 평화와 여유) 바다의 물결처럼, 네 삶은 2025년에 정말
+              평화롭고 여유로운 흐름을 타게 될 거야. 고민하고 불안했던 것들이 다
+              해결되고, 네가 원하는 대로 흘러가는 해가 될 거야. 그리고 물처럼
+              자유로운 시간을 보내면서, 여행이든 새로운 도전이든 마음껏 즐길 수
+              있을 거야. 🌊
+            </div>
+            <div className="pb16 lh">
+              🐶 (강아지, 우정과 믿음) 네 주변에는 너를 진심으로 아끼고 믿어주는
+              사람들이 더 많아질 거야. 기존의 소중한 친구들과는 더 끈끈해지고,
+              새로운 좋은 사람들도 네 삶에 들어올 거야. 강아지처럼 순수하고 의리
+              넘치는 사람들과 함께하면, 어떤 순간도 행복하고 든든할 거야. 🐾
+              네가 주는 따뜻함이 너한테 더 큰 행복으로 돌아올 거야.
+            </div>
+            <div className="pb16 lh" style={{ fontWeight: 700, fontSize: 18 }}>
+              2025년 째웅이의 키워드
+            </div>
+
+            <div className="pb16 lh">
+              💖 깊어진 사랑 | 💰 풍요로운 결실 | 🌱 꾸준한 성장 | 🌊 평화로운
+              흐름 | 🐾 믿음의 연결
+            </div>
+            <div className="pb16 lh">
+              너는 2025년에 진짜 잘될 수밖에 없어.
+              <div>
+                지금처럼만 해도 네가 상상하지 못한 행복들이 너한테 찾아올 거야
+                💕
               </div>
-              <div className="pb16">
-                {" "}
-                💵 (돈, 풍요와 기회) 올해는 네가 했던 노력들이 하나둘 결실을
-                맺고, 재물적인 부분에서도 안정과 풍요를 가져다줄 해야. 새로운
-                기회가 찾아오거나, 너도 몰랐던 숨은 행운이 돈이 되어 나타날
-                거야. 💰 "내가 이걸 잘했다!" 싶을 만큼 뿌듯한 결과들을 보게 될
-                거야. 계획했던 걸 차근차근 실행해봐. 너 진짜 멋진 해를 만들
-                거야!
-              </div>
-              <div className="pb16">
-                {" "}
-                🌳 (나무, 성장과 안정) 나무는 네 삶의 뿌리를 의미해. 2025년은
-                네가 그 뿌리를 더 깊이 내리고, 삶을 안정적으로 만들어가는 해가
-                될 거야. 너의 노력과 끈기가 차곡차곡 쌓이면서, 네가 정말 "이건
-                나다!" 하고 자랑할 수 있는 걸 만들어낼 거야. 그리고, 자연 속에서
-                쉼과 힐링도 누릴 수 있는 순간들이 많아질 거야. 🌱
-              </div>
-              <div className="pb16">
-                {" "}
-                🌊 (물결, 평화와 여유) 바다의 물결처럼, 네 삶은 2025년에 정말
-                평화롭고 여유로운 흐름을 타게 될 거야. 고민하고 불안했던 것들이
-                다 해결되고, 네가 원하는 대로 흘러가는 해가 될 거야. 그리고
-                물처럼 자유로운 시간을 보내면서, 여행이든 새로운 도전이든 마음껏
-                즐길 수 있을 거야. 🌊
-              </div>
-              <div className="pb16">
-                {" "}
-                🐶 (강아지, 우정과 믿음) 네 주변에는 너를 진심으로 아끼고
-                믿어주는 사람들이 더 많아질 거야. 기존의 소중한 친구들과는 더
-                끈끈해지고, 새로운 좋은 사람들도 네 삶에 들어올 거야. 강아지처럼
-                순수하고 의리 넘치는 사람들과 함께하면, 어떤 순간도 행복하고
-                든든할 거야. 🐾 네가 주는 따뜻함이 너한테 더 큰 행복으로 돌아올
-                거야.
-              </div>
-              <div className="pb16">
-                {" "}
-                2025년 째웅이의 키워드 💖 깊어진 사랑 | 💰 풍요로운 결실 | 🌱
-                꾸준한 성장 | 🌊 평화로운 흐름 | 🐾 믿음의 연결 이렇게
-              </div>
-              <div className="pb16">
-                {" "}
-                너는 2025년에 진짜 잘될 수밖에 없어. 지금처럼만 해도 네가
-                상상하지 못한 행복들이 너한테 찾아올 거야. 💕 네가 누릴 모든
-                순간이 기대돼! 😊
-              </div>
-            </>
+              네가 누릴 모든 순간이 기대돼! 😊
+            </div>
           </div>
         )
       ) : (
