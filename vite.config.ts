@@ -4,7 +4,7 @@ import * as path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "www.emoji2025.site",
+  // base: "www.emoji2025.site",
   // base: "https://songtak.github.io/invite-maker",
   plugins: [react()],
   resolve: {
