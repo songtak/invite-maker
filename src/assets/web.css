@@ -17,6 +17,8 @@
 
   .main_content {
     /* height: 100%; */
+    display: grid;
+    place-items: center;
   }
   .title-wrapper {
     /* padding-bottom: 80px; */
@@ -116,5 +118,34 @@
   }
   .jw::-webkit-scrollbar {
     display: none; /* 스크롤바 숨김 */
+  }
+
+  .jw-button {
+    margin-top: 40px;
+    background: linear-gradient(135deg, #000000, #000000);
+    border: none;
+    letter-spacing: 2px;
+
+    border-radius: 50px;
+    padding: 12px 40px;
+    font-size: 0.7rem;
+    /* font-weight: bold; */
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+    outline: none;
+  }
+
+  .jw-button:hover {
+    background: linear-gradient(135deg, #000000, #000000);
+    transform: scale(1.1);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .jw-button:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 }

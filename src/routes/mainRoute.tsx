@@ -2,6 +2,7 @@
 import { RouteObject } from "react-router";
 import ErrorPage from "@pages/common/ErrorPage";
 import MainPage from "@pages/MainPage";
+import ResultPage from "@pages/ResultPage";
 import LoginPage from "@pages/LoginPage";
 import AuthTestPage from "@pages/AuthTestPage";
 import AuthLayout from "@/components/layouts/AuthLayout";
@@ -25,6 +26,11 @@ const authRoutes: RouteObject[] = [
   {
     path: "/invite-maker",
     element: <MainPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/result",
+    element: <ResultPage />,
     errorElement: <ErrorPage />,
   },
   {

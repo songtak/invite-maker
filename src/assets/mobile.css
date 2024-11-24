@@ -12,6 +12,8 @@
   .main_content {
     /* height: 100%; */
     padding-top: 40px;
+    display: grid;
+    place-items: center;
   }
 
   .main_page_content {
@@ -96,7 +98,7 @@
 
   .simple-input {
     width: 100%;
-    max-width: 240px;
+    /* max-width: 240px; */
     padding: 10px 15px;
     font-size: 16px;
     border: 1px solid #000000;
@@ -121,7 +123,7 @@
   }
   .child_p {
     /* margin-top: 80vh; */
-    height: fit-content;
+    /* height: fit-content; */
   }
 
   .pb16 {

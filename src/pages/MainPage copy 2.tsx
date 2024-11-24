@@ -187,7 +187,7 @@ const MainPage = () => {
               onChange={onChange}
               // maxLength={15}
             />
-            {/* <LocalizationProvider
+            <LocalizationProvider
               dateAdapter={AdapterDayjs}
               adapterLocale="ko"
 
@@ -215,15 +215,15 @@ const MainPage = () => {
                   }}
                 />
               </DemoContainer>
-            </LocalizationProvider> */}
+            </LocalizationProvider>
             <div style={{ paddingTop: "40px" }}>
               <button
                 className="cute-button"
                 disabled={name.length < 1}
                 onClick={() => {
-                  // navigate(`/result?${name}_${selectedDate}`);
+                  navigate(`/result?${name}_${selectedDate}`);
 
-                  handleButtonClick();
+                  // handleButtonClick();
                 }}
               >
                 알아보자✨
@@ -234,19 +234,22 @@ const MainPage = () => {
       </div>
       {!isClicked ? (
         !isJw ? (
-          <div
-            className="jw-button"
-            onClick={() => {
-              setIsJw(true);
-              ReactGA.event({
-                category: "is_jw_button",
-                action: "click",
-                label: "쨰웅",
-                value: 1,
-              });
-            }}
-          >
-            혹시? 김재웅이신가요?
+          <div className="child">
+            <p
+              className="child_p"
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                setIsJw(true);
+                ReactGA.event({
+                  category: "is_jw_button",
+                  action: "click",
+                  label: "쨰웅",
+                  value: 1,
+                });
+              }}
+            >
+              혹시? 김재웅이신가요?
+            </p>
           </div>
         ) : (
           <div className="jw">
