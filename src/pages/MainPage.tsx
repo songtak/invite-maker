@@ -89,7 +89,6 @@ const MainPage = () => {
       label: name,
       value: 1,
     });
-    navigate("/result");
     await setIsClicked(true);
     const emoji = getRandomEmojis(5);
     setEmojis(emoji);
