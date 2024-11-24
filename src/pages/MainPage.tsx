@@ -39,6 +39,8 @@ const MainPage = () => {
     page: location.pathname, // useRouter를 사용하여, pathname값을 가져옵니다.
   });
 
+  console.log("location.pathname", location.pathname);
+
   const getRandomEmojis = (count: number): string[] => {
     // 1. 모든 ID를 배열로 추출
     const availableIds = emojiList.map((e) => e.id);
@@ -75,7 +77,7 @@ const MainPage = () => {
     ReactGA.event({
       category: "start_button",
       action: "click",
-      label: "알아보기",
+      label: name,
       value: 1,
     });
 

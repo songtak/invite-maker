@@ -15,6 +15,7 @@ const MainRouter = () => {
   useEffect(() => {
     ReactGA.initialize(`${PUBLIC_GA_ID}`);
   }, []);
+
   return (
     <div className="wrapper">
       <div className="main_wrapper">
