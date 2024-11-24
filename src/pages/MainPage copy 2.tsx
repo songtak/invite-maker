@@ -11,8 +11,6 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import "dayjs/locale/ko";
 import dayjs from "dayjs";
 
-import koLocale from "date-fns/locale/ko";
-
 import { getResponseFromGPT } from "../services/api";
 import { emojiList1 } from "../assets/emojis/emojiList1";
 import { emojiList2 } from "../assets/emojis/emojiList2";
