@@ -150,6 +150,7 @@ const MainPage = () => {
     script.setAttribute("charset", "utf-8");
 
     script.setAttribute("async", "true");
+    /** @ts-ignore */
     scriptElement.current?.appendChild(script);
   }, []);
 
@@ -349,7 +350,7 @@ const MainPage = () => {
             style={{ display: "none" }}
             data-ad-unit="DAN-jBHD2oE0XAGRAFIb"
             data-ad-width="320"
-            data-ad-height="100"
+            data-ad-height="50"
           />
         </div>
       )}

@@ -27,6 +27,7 @@
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
+    overflow: auto;
   }
 
   .main_page_content {
