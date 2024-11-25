@@ -81,6 +81,7 @@ const MainPage = () => {
 
     return selectedEmojis;
   };
+
   // http://localhost:5173/
   const handleButtonClick = async () => {
     ReactGA.event({
@@ -89,16 +90,18 @@ const MainPage = () => {
       label: name,
       value: 1,
     });
-    await setIsClicked(true);
-    const emoji = getRandomEmojis(5);
-    setEmojis(emoji);
-    await getResponseFromGPT(
-      `친구 ${name}의 이모지가 이렇게 ${emoji} 5개가 나왔는데 이걸 토대로 2025년 운세를 해석해줘 무조건 긍정적인 방향으로 부탁해! 내용은 이모지(이모지 이름) 내용서술 줄바꿈 다음 이모지... 그리고 마지막엔 정리! 그리고 친구에게 말하듯 다정한 말투로 부탁하고 친구의 이름도 불러줘!`,
-      // `${emojis} 이 이모지 5개가 나왔는데 이걸 토대로 2025년 운세를 해석해줘 무조건 긍정적인 방향으로 부탁해! 그리고 친구한테 말하듯 서술적으로!`
-      (chunk: any) => {
-        setChatData((prev) => prev + chunk); // 스트리밍 데이터 추가
-      }
-    );
+    // await setIsClicked(true);
+    // const emoji = getRandomEmojis(5);
+    // setEmojis(emoji);
+    // await getResponseFromGPT(
+    //   `친구 ${name}의 이모지가 이렇게 ${emoji} 5개가 나왔는데 이걸 토대로 2025년 운세를 해석해줘 무조건 긍정적인 방향으로 부탁해! 내용은 이모지(이모지 이름) 내용서술 줄바꿈 다음 이모지... 그리고 마지막엔 정리! 그리고 친구에게 말하듯 다정한 말투로 부탁하고 친구의 이름도 불러줘!`,
+    //   // `${emojis} 이 이모지 5개가 나왔는데 이걸 토대로 2025년 운세를 해석해줘 무조건 긍정적인 방향으로 부탁해! 그리고 친구한테 말하듯 서술적으로!`
+    //   (chunk: any) => {
+    //     setChatData((prev) => prev + chunk); // 스트리밍 데이터 추가
+    //   }
+    // );
+
+    navigate(`/result?name=${name}&date=${selectedDate}`);
 
     // setChatData(ddd);
   };
@@ -184,7 +187,7 @@ const MainPage = () => {
               onChange={onChange}
               // maxLength={15}
             />
-            {/* <LocalizationProvider
+            <LocalizationProvider
               dateAdapter={AdapterDayjs}
               adapterLocale="ko"
 
@@ -212,40 +215,37 @@ const MainPage = () => {
                   }}
                 />
               </DemoContainer>
-            </LocalizationProvider> */}
+            </LocalizationProvider>
             <div style={{ paddingTop: "40px" }}>
               <button
                 className="cute-button"
-                disabled={name.length < 1}
+                disabled={name.length < 1 || selectedDate === null}
                 onClick={() => {
-                  // navigate(`/result?${name}_${selectedDate}`);
-
                   handleButtonClick();
                 }}
               >
                 알아보자✨
               </button>
             </div>
+            <div
+              className="jw-button"
+              onClick={() => {
+                setIsJw(true);
+                ReactGA.event({
+                  category: "is_jw_button",
+                  action: "click",
+                  label: "쨰웅",
+                  value: 1,
+                });
+              }}
+            >
+              혹시? 김재웅이신가요?
+            </div>
           </div>
         )}
       </div>
       {!isClicked ? (
-        !isJw ? (
-          <div
-            className="jw-button"
-            onClick={() => {
-              setIsJw(true);
-              ReactGA.event({
-                category: "is_jw_button",
-                action: "click",
-                label: "쨰웅",
-                value: 1,
-              });
-            }}
-          >
-            혹시? 김재웅이신가요?
-          </div>
-        ) : (
+        isJw && (
           <div className="jw">
             <div className="pb16 lh" style={{ fontWeight: 700, fontSize: 18 }}>
               🥰 2025년 째웅이 운세 해석
@@ -305,6 +305,16 @@ const MainPage = () => {
       ) : (
         <></>
       )}
+      <div className="songtak" style={{ marginTop: "24px" }}>
+        <span
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            window.location.href = "https://instagram.com/sn9tk";
+          }}
+        >
+          made by songtak
+        </span>
+      </div>
     </div>
   );
 };

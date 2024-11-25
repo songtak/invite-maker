@@ -1,4 +1,18 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  runTransaction,
+  addDoc,
+} from "firebase/firestore";
+import { db } from "../../firebaseConfig";
+import _ from "lodash";
+import IosShareIcon from "@mui/icons-material/IosShare";
+import SaveAltIcon from "@mui/icons-material/SaveAlt";
+import domtoimage from "dom-to-image";
 
 import { getResponseFromGPT } from "../services/api";
 import { emojiList1 } from "../assets/emojis/emojiList1";
@@ -17,10 +31,23 @@ const emojiList = [
   ...emojiList6,
 ];
 
+type Result = {
+  name: string;
+  date: string;
+  resultContent: string;
+  emojis: string;
+};
+
 const ResultPage = () => {
-  const [name, setName] = useState<string>("");
+  const [name, setName] = useState<string | null>(null);
+  const [date, setDate] = useState<string | null>(null);
   const [emojis, setEmojis] = useState<string[]>([""]);
   const [chatData, setChatData] = useState<string>("");
+  const [isDone, setIsDone] = useState<boolean>(false);
+
+  const searchParams = new URLSearchParams(location.search.slice(1));
+  const nameParam = searchParams.get("name");
+  const dateParam = searchParams.get("date");
 
   const getRandomEmojis = (count: number): string[] => {
     // 1. 모든 ID를 배열로 추출
@@ -54,24 +81,287 @@ const ResultPage = () => {
     return selectedEmojis;
   };
 
-  const getResult = async () => {
+  const getEmojiResult = async () => {
+    let chat: any;
     const emoji = getRandomEmojis(5);
     setEmojis(emoji);
-    await getResponseFromGPT(
-      `친구 ${name}의 이모지가 이렇게 ${emoji} 5개가 나왔는데 이걸 토대로 2025년 운세를 해석해줘 무조건 긍정적인 방향으로 부탁해! 내용은 이모지(이모지 이름) 내용서술 줄바꿈 다음 이모지... 그리고 마지막엔 정리! 그리고 친구에게 말하듯 다정한 말투로 부탁하고 친구의 이름도 불러줘!`,
-      // `${emojis} 이 이모지 5개가 나왔는데 이걸 토대로 2025년 운세를 해석해줘 무조건 긍정적인 방향으로 부탁해! 그리고 친구한테 말하듯 서술적으로!`
+    const response = await getResponseFromGPT(
+      // "너가 지금 흥미로워 하는거 이야기해봐",
+      // `다음 이모지 5개를 기반으로 2025년 운세를 무조건! 긍정적으로 해석해줘. 결과는 아래 형식에 맞게 작성해줘: 1. 각 이모지 옆에 이모지(이모지 이름, 이모지의 상징하는 내용) 그리고 무조건 긍정적으로 해석한 내용 2. 마지막에 운세에서 파생되는 주요 키워드 5개를 제시 및 간략 설명 3. 친구에게 말하듯 다정한 말투 4. 입력받은 이름도 불러줘 이름: ${name} 이모지: ${emoji}`,
+      `친구 ${nameParam}의 이모지가 이렇게 ${emoji} 5개가 나왔는데 이걸 토대로 2025년 운세를 해석해줘
+      1. 무조건 긍정적인 방향으로 해석
+      2. 답변은 이모지(이모지 이름) 내용서술
+      3. 친구에게 말하듯 다정한 말투
+      5. 친구의 이름을 말할것`,
+      // `${nameParam}의 이모지 ${emoji} 를 보고 2025년 운세를 긍정적으로 해석해줘. 이모지마다 의미를 해석하고, 다정한 말투로 친구처럼 설명해줘. 간단하고 이해하기 쉽게 작성해줘.`,
       (chunk: any) => {
-        setChatData((prev) => prev + chunk); // 스트리밍 데이터 추가
+        setChatData((prev) => {
+          const updatedChat = prev.toString() + chunk.toString(); // 기존 데이터에 chunk 추가
+          chat = updatedChat; // chat 변수 업데이트
+
+          return updatedChat; // setChatData에 반영
+        });
       }
     );
+
+    if (response) {
+      addResultWithCustomDocName({
+        name: name as string,
+        date: date as string,
+        resultContent: chat as string,
+        emojis: emoji.join(""),
+      });
+      setIsDone(true);
+    }
   };
+
+  const resultListCollectionRef = collection(db, `result-list`);
+
+  const findDocumentByName = async () => {
+    try {
+      // 특정 문서의 참조를 생성
+      const docRef = doc(db, "result-list", `${dateParam}_${nameParam}`);
+
+      // 문서 가져오기
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const saveData = docSnap.data();
+        setEmojis(saveData.emojis);
+        setChatData(saveData.resultContent);
+        setIsDone(true);
+
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      console.error("Error fetching document:", e);
+      return false;
+    }
+  };
+
+  /** 파이어스토어에 결과 저장 */
+  const addResultWithCustomDocName = async (resultData: Result) => {
+    try {
+      const resultListRef = collection(db, "result-list");
+
+      // 현재 컬렉션의 문서 개수를 가져옴
+      const snapshot = await getDocs(resultListRef);
+      const currentLength = snapshot.size; // 문서 개수
+
+      // 새로운 ID 계산
+      const newID = currentLength + 1;
+
+      // 새로운 문서 데이터
+      const newResult = {
+        ...resultData,
+        id: newID, // ID 필드에 새로 계산된 값 추가
+      };
+
+      // 문서 이름 지정하여 저장
+      const docRef = doc(db, "result-list", `${dateParam}_${nameParam}`); // customDocName은 지정할 문서 이름
+      await setDoc(docRef, newResult);
+
+      console.log("Document successfully added with custom name:", name);
+    } catch (e) {
+      console.error("Error adding document with custom name:", e);
+    }
+  };
+
+  /** =============================================================================== */
+
+  const isMobile = () => {
+    return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(
+      navigator.userAgent
+    );
+  };
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      alert("주소가 복사되었습니다!");
+    } catch (error) {
+      console.error("URL 복사 실패:", error);
+      alert("URL 복사에 실패했습니다.");
+    }
+  };
+  // 모바일 공유 함수
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`,
+          text: "🫧🫧🐍🐍",
+          url: window.location.href,
+        });
+      } catch (error) {
+        console.error("공유 실패:", error);
+      }
+    } else {
+      alert("공유하기 기능을 지원하지 않는 브라우저입니다.");
+    }
+  };
+
+  const handleClickShare = async () => {
+    console.log("handleClickShare");
+    if (isMobile()) {
+      handleShare(); // 모바일: 공유하기
+    } else {
+      copyToClipboard(); // 웹: URL 복사
+    }
+  };
+  const handleClickSave = () => {
+    console.log("handleClickSave");
+    createSignatureImage();
+  };
+  /** =============================================================================== */
+  const signatureImageRef = useRef<HTMLDivElement>(null);
+
+  /**
+   * @function
+   * @description 첨부용 서명 이미지 생성
+   */
+  const createSignatureImage = useCallback(async () => {
+    if (signatureImageRef.current === null) {
+      return;
+    }
+    await domtoimage
+      .toJpeg(signatureImageRef.current, { cacheBust: true, quality: 0.95 })
+
+      .then((dataUrl: string) => {
+        // Base64 데이터에서 헤더와 데이터 분리
+        const [header, base64Data] = dataUrl.split(",");
+
+        // MIME 타입 추출
+        /** @ts-ignore */
+        const mimeType = header.match(/:(.*?);/)[1];
+
+        // Base64 데이터를 바이너리로 변환
+        const binary = atob(base64Data);
+        const array = [];
+        for (let i = 0; i < binary.length; i++) {
+          array.push(binary.charCodeAt(i));
+        }
+
+        // Blob 생성
+        const blob = new Blob([new Uint8Array(array)], { type: mimeType });
+
+        // URL 생성 및 다운로드 트리거
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        return dataUrl;
+      })
+      .catch((e: any) => {
+        console.log("createSignatureImage / ERROR", e);
+      });
+  }, [signatureImageRef]);
+
+  /** 저장용 이미지 html */
+  const signatureImageHtml = () => {
+    return (
+      <div className="save_image_wrapper" ref={signatureImageRef}>
+        <div className="save_image_title" style={{ paddingBottom: "14px" }}>
+          2025년
+        </div>
+        <div style={{ marginBottom: 16 }}>
+          <div className="save_image_title_sub">{name}에게</div>
+          <div className="save_image_title_sub">일어날 좋은 일들!</div>
+        </div>
+        <div className="save_image_emoji">{emojis}</div>
+        <div>
+          <p className="save_image_chat">{chatData}</p>
+        </div>
+        <div
+          className="songtak"
+          style={{ paddingBottom: "24px", paddingTop: "24px" }}
+        >
+          <span style={{ fontSize: "12px" }}>@sn9tk</span>
+        </div>
+      </div>
+    );
+  };
+
+  /** =============================================================================== */
+
   useEffect(() => {
-    // getResult();
+    _.isString(nameParam) && setName(nameParam);
+    _.isString(dateParam) && setDate(dateParam);
   }, []);
 
+  useEffect(() => {
+    /** 해당 유저 정보가 없을때만 api 호출 */
+    if (_.isString(nameParam) && _.isString(dateParam)) {
+      const isExistResult = findDocumentByName();
+      isExistResult.then((isExist: boolean) => {
+        !isExist && getEmojiResult();
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      setChatData("");
+    };
+  }, []);
+
+  // 호출 예시
+  // addResultWithCustomDocName({
+  //   name: "John Doe",
+  //   date: "2024-11-25",
+  //   resultContent: "Sample content for incremented ID",
+  //   emojis: "",
+  // });
+
   return (
-    <div>
-      <div>Login</div>
+    <div className="main_content">
+      <div className="page_wrapper">
+        <div className="title-wrapper">
+          <div className="title" style={{ paddingBottom: "14px" }}>
+            2025년
+          </div>
+          <div style={{ marginBottom: 16 }}>
+            <div className="title_sub">{name}에게</div>
+            <div className="title_sub">일어날 좋은 일들!</div>
+          </div>
+          <div className="emoji">{emojis}</div>
+          <div>
+            <p className="chat lh">{chatData}</p>
+          </div>
+        </div>
+      </div>
+      {isDone && (
+        <div>
+          <span style={{ marginRight: "32px" }} className="tooltip">
+            <IosShareIcon onClick={handleClickShare} />
+            <span className="tooltip-text">공유하기</span>
+          </span>
+          <span className="tooltip">
+            <SaveAltIcon onClick={handleClickSave} />
+            <span className="tooltip-text">저장하기</span>
+          </span>
+        </div>
+      )}
+      <div
+        className="songtak"
+        style={{ paddingBottom: "24px", paddingTop: "24px" }}
+      >
+        <span
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            window.location.href = "https://instagram.com/sn9tk";
+          }}
+        >
+          made by songtak
+        </span>
+      </div>
+      {/* 다운로드용 이미지가 화면에 안보이도록 설정 */}
+      <div className="save_image_hide">{signatureImageHtml()}</div>
     </div>
   );
 };

@@ -1,35 +1,45 @@
-const emojiList1: { id: number; emoji: string }[] = [
+// https://www.emojiall.com/ko/categories/A
+// https://namu.wiki/w/%EC%9D%B4%EB%AA%A8%EC%A7%80/%EB%AA%A9%EB%A1%9D/Smileys%20%26%20Emotion
+const emojiList1: { id: number; emoji: string; title?: string }[] = [
   {
     id: 1,
     emoji: "😀",
+    title: "활짝 웃는 얼굴",
   },
   {
     id: 2,
     emoji: "😃",
+    title: "눈을 크게 뜨고 웃는 얼굴",
   },
   {
     id: 3,
     emoji: "😄",
+    title: "미소 짓는 눈으로 활짝 웃는 얼굴",
   },
   {
     id: 4,
     emoji: "😁",
+    title: "미소 짓는 눈으로 웃는 얼굴",
   },
   {
     id: 5,
     emoji: "😆",
+    title: "신난 얼굴",
   },
   {
     id: 6,
     emoji: "😅",
+    title: "땀 흘리며 웃는 얼굴",
   },
   {
     id: 7,
     emoji: "🤣",
+    title: "바닥을 구르며 웃는 얼굴",
   },
   {
     id: 8,
     emoji: "😂",
+    title: "",
   },
   {
     id: 9,

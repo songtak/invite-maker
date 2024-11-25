@@ -24,7 +24,8 @@ export const getResponseFromGPT = async (prompt: any, setChatData: any) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: "gpt-4",
+      model: "gpt-4o",
+      // model: "gpt-4",
       messages: [
         {
           role: "user",
@@ -32,7 +33,8 @@ export const getResponseFromGPT = async (prompt: any, setChatData: any) => {
         },
       ],
       stream: true,
-      max_tokens: 1000,
+      max_tokens: 600,
+      temperature: 0.5,
     }),
   });
 
@@ -75,38 +77,6 @@ export const getResponseFromGPT = async (prompt: any, setChatData: any) => {
     }
   }
 
-  // const response = await axios.post(
-  //   OPENAI_ENDPOINT,
-  //   {
-  //     messages: [
-  //       {
-  //         role: "user",
-  //         content: prompt,
-  //       },
-  //     ],
-  //     stream: true,
-  //     max_tokens: 4096,
-  //     model: "gpt-4",
-  //     // prompt: prompt,
-  //     // max_tokens: 150000,
-  //     // model: "gpt-4o",
-  //     // model: "gpt-3.5-turbo",
-  //     // model: "gpt-3.5-turbo-instruct",
-  //   },
-  //   {
-  //     headers: {
-  //       Authorization: `Bearer ${decodeAppKey()}`,
-  //       "Content-Type": "application/json",
-  //     },
-  //     responseType: "stream", // 스트리밍 활성화
-  //   }
-  // );
-
-  console.log("response", response);
-
-  return response;
-  // return new Promise<void>((resolve, reject) => {
-  //   response.data.on("end", () => resolve());
-  //   response.data.on("error", (error: any) => reject(error));
-  // });
+  return true;
+  // return response;
 };

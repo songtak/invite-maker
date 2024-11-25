@@ -23,17 +23,17 @@ const MainRouter = () => {
         <RouterProvider router={router}>
           <ScrollToTop />
         </RouterProvider>
-        <div className="songtak">
-          <span
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-              window.location.href = "https://instagram.com/sn9tk";
-            }}
-          >
-            made by songtak
-          </span>
-        </div>
       </div>
+      {/* <div className="songtak" style={{ marginTop: "24px" }}>
+        <span
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            window.location.href = "https://instagram.com/sn9tk";
+          }}
+        >
+          made by songtak
+        </span>
+      </div> */}
     </div>
   );
 };
