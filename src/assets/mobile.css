@@ -46,14 +46,14 @@
   }
   .title {
     padding-top: 16px;
-    font-size: 40px;
-    font-weight: 600;
+    font-size: 32px;
+    font-weight: 500;
     /* padding-bottom: 3px; */
     /* width: 730px; */
     text-align: center;
   }
   .title_sub {
-    font-size: 32px;
+    font-size: 26px;
     /* padding-bottom: 30px; */
     /* width: 730px; */
     text-align: center;
@@ -71,6 +71,7 @@
   .emoji {
     font-size: 40px;
     letter-spacing: 16px;
+    padding: 16px;
   }
 
   .cute-button {
@@ -79,7 +80,7 @@
     border-radius: 50px;
     letter-spacing: 2px;
 
-    padding: 12px 40px;
+    padding: 8px 40px;
     font-size: 1.2rem;
     /* font-weight: bold; */
     color: #ffffff;
@@ -155,6 +156,8 @@
   .jw {
     overflow-y: auto;
     max-height: 78vh;
+    padding-left: 8vw;
+    padding-right: 8vw;
   }
   .jw::-webkit-scrollbar {
     display: none; /* 스크롤바 숨김 */
@@ -192,6 +195,11 @@
   }
   .save_icon:hover {
     cursor: pointer;
+  }
+
+  .tooltip_wrapper {
+    padding-top: 32px;
+    padding-bottom: 32px;
   }
 
   .tooltip {

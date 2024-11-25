@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import CryptoJS from "crypto-js";
 import { useNavigate, useLocation } from "react-router-dom";
 import ReactGA from "react-ga4";
@@ -118,6 +118,18 @@ const MainPage = () => {
     }
   };
 
+  /** 카카오 애드핏 광고 */
+  const scriptElement = useRef(null);
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.setAttribute("src", "https://t1.daumcdn.net/kas/static/ba.min.js");
+    script.setAttribute("charset", "utf-8");
+
+    script.setAttribute("async", "true");
+    scriptElement.current?.appendChild(script);
+  }, []);
+
   // function encodeAppKey(appKey: string, secretKey: string): string {
   //   // appKey와 secretKey를 조합하여 인코딩
   //   const key = CryptoJS.enc.Utf8.parse(secretKey);
@@ -146,7 +158,7 @@ const MainPage = () => {
       <div className="page_wrapper">
         <div className="title-wrapper">
           <div className="title" style={{ paddingBottom: "14px" }}>
-            2025년
+            2025
           </div>
           {!isJw ? (
             isClicked ? (
@@ -158,7 +170,10 @@ const MainPage = () => {
               <div className="title_sub">내게 일어날 좋은 일들!</div>
             )
           ) : (
-            <></>
+            <div>
+              <div className="title_sub">🥰째웅에게</div>
+              <div className="title_sub">일어날 좋은 일들!</div>
+            </div>
           )}
         </div>
         {/* <div className="title_sub">5가지!</div> */}
@@ -185,6 +200,8 @@ const MainPage = () => {
               }}
               placeholder="이름"
               onChange={onChange}
+              size="small"
+
               // maxLength={15}
             />
             <LocalizationProvider
@@ -211,6 +228,7 @@ const MainPage = () => {
                       placeholder: "생년월일",
                       label: "",
                       style: { width: "240px" },
+                      size: "small",
                     },
                   }}
                 />
@@ -224,7 +242,7 @@ const MainPage = () => {
                   handleButtonClick();
                 }}
               >
-                알아보자✨
+                ✨알아보자✨
               </button>
             </div>
             <div
@@ -247,9 +265,9 @@ const MainPage = () => {
       {!isClicked ? (
         isJw && (
           <div className="jw">
-            <div className="pb16 lh" style={{ fontWeight: 700, fontSize: 18 }}>
+            {/* <div className="pb16 lh" style={{ fontWeight: 700, fontSize: 18 }}>
               🥰 2025년 째웅이 운세 해석
-            </div>
+            </div> */}
             <div className="pb16 lh">
               💘 (하트, 사랑과 깊이) 사랑이 2025년엔 더 깊어지고, 너와 상대방이
               서로에게 더 든든한 존재가 될 거야. 작은 일상에서도 서로를 배려하고
@@ -284,7 +302,10 @@ const MainPage = () => {
               넘치는 사람들과 함께하면, 어떤 순간도 행복하고 든든할 거야. 🐾
               네가 주는 따뜻함이 너한테 더 큰 행복으로 돌아올 거야.
             </div>
-            <div className="pb16 lh" style={{ fontWeight: 700, fontSize: 18 }}>
+            <div
+              className="pb16 lh"
+              style={{ fontWeight: 700, fontSize: 18, marginTop: 32 }}
+            >
               2025년 째웅이의 키워드
             </div>
 
@@ -292,7 +313,7 @@ const MainPage = () => {
               💖 깊어진 사랑 | 💰 풍요로운 결실 | 🌱 꾸준한 성장 | 🌊 평화로운
               흐름 | 🐾 믿음의 연결
             </div>
-            <div className="pb16 lh">
+            <div className="pb16 lh" style={{ marginTop: 32 }}>
               너는 2025년에 진짜 잘될 수밖에 없어.
               <div>
                 지금처럼만 해도 네가 상상하지 못한 행복들이 너한테 찾아올 거야
@@ -314,6 +335,15 @@ const MainPage = () => {
         >
           made by songtak
         </span>
+      </div>
+      <div ref={scriptElement}>
+        <ins
+          className="kakao_ad_area"
+          style={{ display: "none" }}
+          data-ad-unit="DAN-jBHD2oE0XAGRAFIb"
+          data-ad-width="320"
+          data-ad-height="100"
+        />
       </div>
     </div>
   );

@@ -323,7 +323,7 @@ const ResultPage = () => {
       <div className="page_wrapper">
         <div className="title-wrapper">
           <div className="title" style={{ paddingBottom: "14px" }}>
-            2025년
+            2025
           </div>
           <div style={{ marginBottom: 16 }}>
             <div className="title_sub">{name}에게</div>
@@ -336,8 +336,8 @@ const ResultPage = () => {
         </div>
       </div>
       {isDone && (
-        <div>
-          <span style={{ marginRight: "32px" }} className="tooltip">
+        <div className="tooltip_wrapper">
+          <span style={{ marginRight: "100px" }} className="tooltip">
             <IosShareIcon onClick={handleClickShare} />
             <span className="tooltip-text">공유하기</span>
           </span>

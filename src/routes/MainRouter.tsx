@@ -6,6 +6,7 @@ import useDynamicRoutes from "@libs/hooks/useDynamicRoutes";
 import ScrollToTop from "@libs/ScrollToTop";
 import "../assets/web.css";
 import "../assets/mobile.css";
+import "../assets/common.css";
 
 /** 기본 라우터 */
 const MainRouter = () => {
@@ -17,7 +18,7 @@ const MainRouter = () => {
   }, []);
 
   return (
-    <div className="wrapper">
+    <div className="wrapper common">
       <div className="main_wrapper">
         {/* @ts-ignore */}
         <RouterProvider router={router}>
