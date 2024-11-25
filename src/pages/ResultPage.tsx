@@ -310,13 +310,17 @@ const ResultPage = () => {
     };
   }, []);
 
-  // 호출 예시
-  // addResultWithCustomDocName({
-  //   name: "John Doe",
-  //   date: "2024-11-25",
-  //   resultContent: "Sample content for incremented ID",
-  //   emojis: "",
-  // });
+  /** 카카오 애드핏 광고 */
+  const scriptElement = useRef(null);
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.setAttribute("src", "https://t1.daumcdn.net/kas/static/ba.min.js");
+    script.setAttribute("charset", "utf-8");
+
+    script.setAttribute("async", "true");
+    scriptElement.current?.appendChild(script);
+  }, []);
 
   return (
     <div className="main_content">
@@ -359,6 +363,15 @@ const ResultPage = () => {
         >
           made by songtak
         </span>
+      </div>
+      <div ref={scriptElement} style={{ width: "-webkit-fill-available" }}>
+        <ins
+          className="kakao_ad_area"
+          style={{ display: "none" }}
+          data-ad-unit="DAN-jBHD2oE0XAGRAFIb"
+          data-ad-width="320"
+          data-ad-height="100"
+        />
       </div>
       {/* 다운로드용 이미지가 화면에 안보이도록 설정 */}
       <div className="save_image_hide">{signatureImageHtml()}</div>

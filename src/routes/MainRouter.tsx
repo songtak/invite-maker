@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { RouterProvider, HashRouter } from "react-router-dom";
 import ReactGA from "react-ga4";
 

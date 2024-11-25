@@ -21,8 +21,7 @@
   }
 
   .main_content {
-    height: 100%;
-    padding-top: 40px;
+    height: calc(100% - 50px);
     display: flex;
     place-items: center;
     flex-direction: column;
@@ -62,7 +61,7 @@
     padding-left: 8vw;
     padding-right: 8vw;
     /* height: 54vh; */
-    overflow-y: auto;
+    /* overflow-y: auto; */
     /* height: calc(100vh - 55vh); */
   }
   .lh {
@@ -154,8 +153,9 @@
     margin-bottom: 16px;
   }
   .jw {
-    overflow-y: auto;
-    max-height: 78vh;
+    /* overflow-y: auto; */
+    padding-top: 24px;
+    /* max-height: 78vh; */
     padding-left: 8vw;
     padding-right: 8vw;
   }
