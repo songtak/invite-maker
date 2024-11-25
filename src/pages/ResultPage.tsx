@@ -382,9 +382,18 @@ const ResultPage = () => {
           data-ad-height="50"
         />
       </div>
+      <div ref={scriptElement} style={{ width: "-webkit-fill-available" }}>
+        <ins
+          className="kakao_ad_area"
+          style={{ display: "none" }}
+          data-ad-unit="DAN-rHPZwIFTmiWfIt6i"
+          data-ad-width="728"
+          data-ad-height="90"
+        />
+      </div>
       {/* 다운로드용 이미지가 화면에 안보이도록 설정 */}
-      <div className="">{signatureImageHtml()}</div>
-      {/* <div className="save_image_hide">{signatureImageHtml()}</div> */}
+      <div className="save_image_hide">{signatureImageHtml()}</div>
+      {/* <div className="">{signatureImageHtml()}</div> */}
     </div>
   );
 };
