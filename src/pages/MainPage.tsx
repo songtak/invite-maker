@@ -18,7 +18,9 @@ import { emojiList3 } from "../assets/emojis/emojiList3";
 import { emojiList4 } from "../assets/emojis/emojiList4";
 import { emojiList5 } from "../assets/emojis/emojiList5";
 import { emojiList6 } from "../assets/emojis/emojiList6";
+import { jwList } from "../assets/jw";
 import { width } from "@mui/system";
+import TypingEffect from "../components/TypingEffect";
 
 type Emoji = { id: number; emoji: string };
 
@@ -33,6 +35,8 @@ const MainPage = () => {
   const [emojis, setEmojis] = useState<string[]>([""]);
   const [chatData, setChatData] = useState<string>("");
   const [isJw, setIsJw] = useState<boolean>(false);
+  const [isShowEmojis, setIsShowEmojis] = useState<boolean>(false);
+
   // 사랑 돈 나무 바다 강아지
   // 💘, 💵, 🌳, 🌊, 🐶
 
@@ -121,6 +125,10 @@ const MainPage = () => {
     });
 
     window.location.href = "https://instagram.com/sn9tk";
+  };
+
+  const handleTypingComplete = () => {
+    setIsShowEmojis(true);
   };
 
   // function encodeAppKey(appKey: string, secretKey: string): string {
@@ -267,75 +275,43 @@ const MainPage = () => {
               </div>
             </div>
           )}
-        </div>
-        {!isClicked ? (
-          isJw && (
-            <div className="jw ">
-              {/* <div className="pb16 lh" style={{ fontWeight: 700, fontSize: 18 }}>
+          {!isClicked ? (
+            isJw && (
+              <div className="jw ">
+                {/* <div className="pb16 lh" style={{ fontWeight: 700, fontSize: 18 }}>
               🥰 2025년 째웅이 운세 해석
             </div> */}
-              <div className="pb16 lh emoji">💘💵🌳🌊🐶</div>
-              <div className="pb16 lh">
-                💘 (하트, 사랑과 깊이) 사랑이 2025년엔 더 깊어지고, 너와
-                상대방이 서로에게 더 든든한 존재가 될 거야. 작은 일상에서도
-                서로를 배려하고 웃게 만들어주는 순간들이 많아질 거야. 네가 주는
-                따뜻함이 더 커져서, 사랑이 너의 하루하루를 진짜 특별하게 채울
-                거야. 💖
-              </div>
-              <div className="pb16 lh">
-                💵 (돈, 풍요와 기회) 올해는 네가 했던 노력들이 하나둘 결실을
-                맺고, 재물적인 부분에서도 안정과 풍요를 가져다줄 해야. 새로운
-                기회가 찾아오거나, 너도 몰랐던 숨은 행운이 돈이 되어 나타날
-                거야. 💰 "내가 이걸 잘했다!" 싶을 만큼 뿌듯한 결과들을 보게 될
-                거야. 계획했던 걸 차근차근 실행해봐. 너 진짜 멋진 해를 만들
-                거야!
-              </div>
-              <div className="pb16 lh">
-                🌳 (나무, 성장과 안정) 나무는 네 삶의 뿌리를 의미해. 2025년은
-                네가 그 뿌리를 더 깊이 내리고, 삶을 안정적으로 만들어가는 해가
-                될 거야. 너의 노력과 끈기가 차곡차곡 쌓이면서, 네가 정말 "이건
-                나다!" 하고 자랑할 수 있는 걸 만들어낼 거야. 그리고, 자연 속에서
-                쉼과 힐링도 누릴 수 있는 순간들이 많아질 거야. 🌱
-              </div>
-              <div className="pb16 lh">
-                🌊 (물결, 평화와 여유) 바다의 물결처럼, 네 삶은 2025년에 정말
-                평화롭고 여유로운 흐름을 타게 될 거야. 고민하고 불안했던 것들이
-                다 해결되고, 네가 원하는 대로 흘러가는 해가 될 거야. 그리고
-                물처럼 자유로운 시간을 보내면서, 여행이든 새로운 도전이든 마음껏
-                즐길 수 있을 거야. 🌊
-              </div>
-              <div className="pb16 lh">
-                🐶 (강아지, 우정과 믿음) 네 주변에는 너를 진심으로 아끼고
-                믿어주는 사람들이 더 많아질 거야. 기존의 소중한 친구들과는 더
-                끈끈해지고, 새로운 좋은 사람들도 네 삶에 들어올 거야. 강아지처럼
-                순수하고 의리 넘치는 사람들과 함께하면, 어떤 순간도 행복하고
-                든든할 거야. 🐾 네가 주는 따뜻함이 너한테 더 큰 행복으로 돌아올
-                거야.
-              </div>
-              <div
-                className="pb16 lh"
-                style={{ fontWeight: 700, fontSize: 18, marginTop: 32 }}
-              >
-                2025년 째웅이의 키워드
-              </div>
+                <div className="pb16 lh emoji">[💘💵🌳🌊🐶]</div>
+                <TypingEffect data={jwList} onComplete={handleTypingComplete} />
+                {isShowEmojis && (
+                  <>
+                    <div
+                      className="pb16 lh"
+                      style={{ fontWeight: 700, fontSize: 18, marginTop: 32 }}
+                    >
+                      2025년 째웅이의 키워드
+                    </div>
 
-              <div className="pb16 lh">
-                💖 깊어진 사랑 | 💰 풍요로운 결실 | 🌱 꾸준한 성장 | 🌊 평화로운
-                흐름 | 🐾 믿음의 연결
+                    <div className="pb16 lh">
+                      💖 깊어진 사랑 | 💰 풍요로운 결실 | 🌱 꾸준한 성장 | 🌊
+                      평화로운 흐름 | 🐾 믿음의 연결
+                    </div>
+                    <div className="pb16 lh" style={{ marginTop: 32 }}>
+                      너는 2025년에 진짜 잘될 수밖에 없어.
+                      <div>
+                        지금처럼만 해도 네가 상상하지 못한 행복들이 너한테
+                        찾아올 거야 💕
+                      </div>
+                      네가 누릴 모든 순간이 기대돼! 😊
+                    </div>
+                  </>
+                )}
               </div>
-              <div className="pb16 lh" style={{ marginTop: 32 }}>
-                너는 2025년에 진짜 잘될 수밖에 없어.
-                <div>
-                  지금처럼만 해도 네가 상상하지 못한 행복들이 너한테 찾아올 거야
-                  💕
-                </div>
-                네가 누릴 모든 순간이 기대돼! 😊
-              </div>
-            </div>
-          )
-        ) : (
-          <></>
-        )}
+            )
+          ) : (
+            <></>
+          )}
+        </div>
         <div className="songtak" style={{ paddingTop: "24px" }}>
           <span
             style={{ cursor: "pointer", paddingBottom: "24px" }}

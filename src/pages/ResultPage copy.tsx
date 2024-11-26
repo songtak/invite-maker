@@ -23,20 +23,8 @@ import { emojiList3 } from "../assets/emojis/emojiList3";
 import { emojiList4 } from "../assets/emojis/emojiList4";
 import { emojiList5 } from "../assets/emojis/emojiList5";
 import { emojiList6 } from "../assets/emojis/emojiList6";
-import { stringLength } from "@firebase/util";
-import Typed from "react-typed";
 
-import TypingEffect from "../components/TypingEffect";
-
-type Emoji = {
-  id: number;
-  emoji: string;
-  title: string;
-  symbol: string;
-  description: string;
-};
-
-const emojiList: Emoji[] = [
+const emojiList = [
   ...emojiList1,
   ...emojiList2,
   ...emojiList3,
@@ -51,80 +39,77 @@ type Result = {
   resultContent: string;
   emojis: string;
   check_date: string;
-  emojiIds: string;
 };
 
 const ResultPage = () => {
   const location = useLocation();
 
-  // console.log("emojiList", emojiList1.length);
+  // console.log("emojiList1", emojiList1.length, 218);
+  // console.log("emojiList2", emojiList2.length, 132);
+  // console.log("emojiList3", emojiList3.length, 132);
+  // console.log("emojiList4", emojiList4.length, 132);
+  // console.log("emojiList5", emojiList5.length, 132);
+  // console.log("emojiList6", emojiList6.length, 132);
 
   const now = dayjs();
   const [name, setName] = useState<string | null>(null);
   const [date, setDate] = useState<string | null>(null);
-  const [emojis, setEmojis] = useState<string[] | string>([""]);
+  const [emojis, setEmojis] = useState<string[]>([""]);
   const [chatData, setChatData] = useState<string>("");
   const [saveChatData, setSaveChatData] = useState<string>("");
   const [isDone, setIsDone] = useState<boolean>(false);
-  const [emojiIds, setEmojiIds] = useState<number[] | null>(null);
-  const [randomData, setRandomData] = useState<Emoji[] | null>(null);
-  const [isShowEmojis, setIsShowEmojis] = useState<boolean>(false);
 
   const searchParams = new URLSearchParams(location.search.slice(1));
   const nameParam = searchParams.get("name");
   const dateParam = searchParams.get("date");
-  // console.log("emojiList", emojiList.length);
 
-  const getRandomEmojis = (count: number): Emoji[] => {
-    // 유효한 ID만 추출
+  const getRandomEmojis = (count: number): string[] => {
+    // 1. 모든 ID를 배열로 추출
     const availableIds = emojiList.map((e) => e.id);
 
-    // 랜덤 ID 생성 함수 (주어진 범위에서 랜덤 값 생성)
-    const getRandomInRange = (start: number, end: number): number => {
-      return Math.floor(Math.random() * (end - start + 1)) + start;
+    // 2. 랜덤 ID 생성 함수
+    const getRandomId = (): number => {
+      return Math.floor(Math.random() * 500) + 1; // 1부터 500까지
     };
 
-    // 각 구간에서 랜덤 ID를 선택
-    const selectedEmojis: Emoji[] = [];
-    for (let i = 0; i < count; i++) {
-      const rangeStart = i * 235 + 1; // 시작 ID
-      const rangeEnd = rangeStart + 235 - 1; // 끝 ID
+    // 3. 랜덤 이모지 가져오기
+    const selectedEmojis: string[] = [];
 
-      // 유효한 ID만 필터링
-      const validIdsInRange = availableIds.filter(
-        (id) => id >= rangeStart && id <= rangeEnd
+    while (selectedEmojis.length < count) {
+      // 랜덤 ID 생성
+      const randomIds = Array.from(
+        { length: count - selectedEmojis.length },
+        getRandomId
       );
 
-      if (validIdsInRange.length > 0) {
-        // 랜덤하게 하나 선택
-        const randomId =
-          validIdsInRange[getRandomInRange(0, validIdsInRange.length - 1)];
-        const emoji = emojiList.find((e) => e.id === randomId);
+      // 유효한 ID만 필터링
+      const validIds = randomIds.filter((id) => availableIds.includes(id));
 
-        // 중복 방지 및 추가
-        if (emoji && !selectedEmojis.includes(emoji)) {
-          selectedEmojis.push(emoji);
-        }
-      }
+      // ID를 기반으로 이모지를 추가
+      validIds.forEach((id) => {
+        const emoji = emojiList.find((e) => e.id === id)?.emoji;
+        if (emoji) selectedEmojis.push(emoji);
+      });
     }
 
-    // ID 기준으로 오름차순 정렬
-    return selectedEmojis.sort((a, b) => a.id - b.id);
+    return selectedEmojis;
   };
 
   const getEmojiResult = async () => {
     let chat: any;
-    const randomEmojis = getRandomEmojis(5);
-    const emoji = randomEmojis.map((item) => item.emoji);
-    const emojiIds = randomEmojis.map((item) => item.id);
-
+    const emoji = getRandomEmojis(5);
     setEmojis(emoji);
-    setEmojiIds(emojiIds);
-
     const response = await getResponseFromGPT(
-      `친구 ${nameParam}의 2025년 ${emoji} 이모지들에 대한 전반적인 느낌
-        긍정적인 내용으로 아주 짧게! 머릿말로 적어줘 친구에게 말하듯 다정한 말투로! 이모지 사용하지 말아줘
-       `,
+      //   "너가 지금 흥미로워 하는거 이야기해봐",
+      // `다음 이모지 5개를 기반으로 2025년 운세를 무조건! 긍정적으로 해석해줘. 결과는 아래 형식에 맞게 작성해줘: 1. 각 이모지 옆에 이모지(이모지 이름, 이모지의 상징하는 내용) 그리고 무조건 긍정적으로 해석한 내용 2. 마지막에 운세에서 파생되는 주요 키워드 5개를 제시 및 간략 설명 3. 친구에게 말하듯 다정한 말투 4. 입력받은 이름도 불러줘 이름: ${name} 이모지: ${emoji}`,
+      `친구 ${nameParam}의 이모지가 이렇게 ${emoji} 5개가 나왔는데 이걸 토대로 2025년 운세를 해석해줘
+        1. 무조건 긍정적인 방향으로 해석
+        2. 답변은 이모지(이모지 이름) 내용서술
+        3. 이모지 이름은 누가 봐도 그 이미지라는 걸 알 수 있도록 할 것
+        3. 친구에게 말하듯 다정한 말투
+        4. 친구의 이름을 말할것
+        5. 800토큰을 거의 채울 것`,
+      // `${nameParam}의 이모지 ${emoji} 를 보고 2025년 운세를 긍정적으로 해석해줘. 이모지마다 의미를 해석하고, 다정한 말투로 친구처럼 설명해줘. 간단하고 이해하기 쉽게 작성해줘.`,
       (chunk: any) => {
         setChatData((prev) => {
           const updatedChat = prev.toString() + chunk.toString(); // 기존 데이터에 chunk 추가
@@ -141,14 +126,14 @@ const ResultPage = () => {
         date: dateParam as string,
         resultContent: chat as string,
         emojis: emoji.join(""),
-        check_date: now.format("YYYY-MM-DD hh:mm"),
-        emojiIds: emojiIds.toString(),
+        check_date: now.format("YYYY-MM-DD"),
       });
       setIsDone(true);
     }
   };
 
-  /** 파이어베이스에 저장된 값 가져오기 */
+  const resultListCollectionRef = collection(db, `result-list`);
+
   const findDocumentByName = async () => {
     try {
       // 특정 문서의 참조를 생성
@@ -159,10 +144,9 @@ const ResultPage = () => {
 
       if (docSnap.exists()) {
         const saveData = docSnap.data();
-
         setEmojis(saveData.emojis);
-        setEmojiIds(saveData.emojiIds.split(",").map(Number));
         setSaveChatData(saveData.resultContent);
+        setIsDone(true);
 
         return true;
       } else {
@@ -266,10 +250,6 @@ const ResultPage = () => {
 
     window.location.href = "https://instagram.com/sn9tk";
   };
-
-  const handleTypingComplete = () => {
-    setIsShowEmojis(true);
-  };
   /** =============================================================================== */
   const signatureImageRef = useRef<HTMLDivElement>(null);
 
@@ -363,7 +343,6 @@ const ResultPage = () => {
       </div>
     );
   };
-  /** =============================================================================== */
 
   const [count, setCount] = useState(0);
 
@@ -375,7 +354,6 @@ const ResultPage = () => {
       }, 60);
 
       if (count > 0 && count === saveChatData.length) {
-        setIsDone(true);
         clearInterval(typingInterval);
       }
       return () => {
@@ -407,23 +385,6 @@ const ResultPage = () => {
     };
   }, []);
 
-  useEffect(() => {
-    // emojiIds
-    console.log("emojiIds", emojiIds);
-
-    if (!_.isNull(emojiIds)) {
-      const filterList = emojiList.filter((emoji) => {
-        // emojiIds.find((id) => id === emoji.id);
-        return emojiIds.find((id) => id === emoji.id);
-      });
-      console.log("filterList", filterList);
-
-      setRandomData(filterList);
-      // console.log("dddd", dddd);
-    }
-  }, [emojiIds]);
-
-  /** =============================================================================== */
   /** 카카오 애드핏 광고 */
   const scriptElement = useRef(null);
 
@@ -436,15 +397,11 @@ const ResultPage = () => {
     /** @ts-ignore */
     scriptElement.current?.appendChild(script);
   }, []);
-  /** =============================================================================== */
 
   useEffect(() => {
     ReactGA.set({ page: location.pathname });
     ReactGA.send("pageview");
   }, [location]);
-  /** =============================================================================== */
-
-  // console.log("dd", typeof emojis);
 
   return (
     <div className="main_content">
@@ -457,51 +414,13 @@ const ResultPage = () => {
             <div className="title_sub">{name}에게</div>
             <div className="title_sub">일어날 좋은 일들!</div>
           </div>
-
-          {!_.isNull(randomData) && (
-            <>
-              <div className="emoji">[{emojis}]</div>
-              <div className="chat ">
-                <p className="lh">{chatData}</p>
-                {isDone && (
-                  <div
-                    className="description_wrapper"
-                    style={{ marginBottom: "40px" }}
-                  >
-                    <TypingEffect
-                      data={randomData}
-                      onComplete={handleTypingComplete}
-                    />
-                    {isShowEmojis && (
-                      <div className="description_emoji_wrapper">
-                        <div
-                          className="pb16 lh"
-                          style={{
-                            fontWeight: 700,
-                            fontSize: 18,
-                            marginTop: 32,
-                          }}
-                        >
-                          2025년 {nameParam}의 키워드
-                        </div>
-                        {randomData.map((item: Emoji, i: number) => (
-                          <span
-                            className="description_emoji pb16 lh"
-                            key={item.id}
-                          >
-                            {`${item.emoji}  ${item.symbol} `} {i < 4 && ` | `}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            </>
-          )}
+          <div className="emoji">{emojis}</div>
+          <div>
+            <p className="chat lh">{chatData}</p>
+          </div>
         </div>
       </div>
-      {isDone && isShowEmojis && (
+      {isDone && (
         <div className="tooltip_wrapper">
           <span style={{ marginRight: "100px" }} className="tooltip">
             <IosShareIcon onClick={handleClickShare} />

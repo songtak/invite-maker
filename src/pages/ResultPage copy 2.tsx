@@ -57,59 +57,54 @@ type Result = {
 const ResultPage = () => {
   const location = useLocation();
 
-  // console.log("emojiList", emojiList1.length);
+  console.log("emojiList", emojiList.length);
 
   const now = dayjs();
   const [name, setName] = useState<string | null>(null);
   const [date, setDate] = useState<string | null>(null);
-  const [emojis, setEmojis] = useState<string[] | string>([""]);
+  const [emojis, setEmojis] = useState<string[]>([""]);
   const [chatData, setChatData] = useState<string>("");
   const [saveChatData, setSaveChatData] = useState<string>("");
   const [isDone, setIsDone] = useState<boolean>(false);
   const [emojiIds, setEmojiIds] = useState<number[] | null>(null);
   const [randomData, setRandomData] = useState<Emoji[] | null>(null);
-  const [isShowEmojis, setIsShowEmojis] = useState<boolean>(false);
 
   const searchParams = new URLSearchParams(location.search.slice(1));
   const nameParam = searchParams.get("name");
   const dateParam = searchParams.get("date");
-  // console.log("emojiList", emojiList.length);
 
   const getRandomEmojis = (count: number): Emoji[] => {
-    // 유효한 ID만 추출
+    // 1. 모든 ID를 배열로 추출
     const availableIds = emojiList.map((e) => e.id);
 
-    // 랜덤 ID 생성 함수 (주어진 범위에서 랜덤 값 생성)
-    const getRandomInRange = (start: number, end: number): number => {
-      return Math.floor(Math.random() * (end - start + 1)) + start;
+    // 2. 랜덤 ID 생성 함수
+    const getRandomId = (): number => {
+      return Math.floor(Math.random() * 500) + 1; // 1부터 500까지
     };
 
-    // 각 구간에서 랜덤 ID를 선택
+    // 3. 랜덤 이모지 가져오기
     const selectedEmojis: Emoji[] = [];
-    for (let i = 0; i < count; i++) {
-      const rangeStart = i * 235 + 1; // 시작 ID
-      const rangeEnd = rangeStart + 235 - 1; // 끝 ID
 
-      // 유효한 ID만 필터링
-      const validIdsInRange = availableIds.filter(
-        (id) => id >= rangeStart && id <= rangeEnd
+    while (selectedEmojis.length < count) {
+      // 랜덤 ID 생성
+      const randomIds = Array.from(
+        { length: count - selectedEmojis.length },
+        getRandomId
       );
 
-      if (validIdsInRange.length > 0) {
-        // 랜덤하게 하나 선택
-        const randomId =
-          validIdsInRange[getRandomInRange(0, validIdsInRange.length - 1)];
-        const emoji = emojiList.find((e) => e.id === randomId);
+      // 유효한 ID만 필터링
+      const validIds = randomIds.filter((id) => availableIds.includes(id));
 
-        // 중복 방지 및 추가
-        if (emoji && !selectedEmojis.includes(emoji)) {
+      // ID를 기반으로 이모지를 추가
+      validIds.forEach((id) => {
+        const emoji = emojiList.find((e) => e.id === id);
+        if (emoji) {
           selectedEmojis.push(emoji);
         }
-      }
+      });
     }
 
-    // ID 기준으로 오름차순 정렬
-    return selectedEmojis.sort((a, b) => a.id - b.id);
+    return selectedEmojis;
   };
 
   const getEmojiResult = async () => {
@@ -119,10 +114,8 @@ const ResultPage = () => {
     const emojiIds = randomEmojis.map((item) => item.id);
 
     setEmojis(emoji);
-    setEmojiIds(emojiIds);
-
     const response = await getResponseFromGPT(
-      `친구 ${nameParam}의 2025년 ${emoji} 이모지들에 대한 전반적인 느낌
+      `친구 ${nameParam}의 2025년 이모지로 ${emoji} 이렇게 5개가 있는데 이모지들이 주는 전반적인 뉘앙스를
         긍정적인 내용으로 아주 짧게! 머릿말로 적어줘 친구에게 말하듯 다정한 말투로! 이모지 사용하지 말아줘
        `,
       (chunk: any) => {
@@ -159,7 +152,6 @@ const ResultPage = () => {
 
       if (docSnap.exists()) {
         const saveData = docSnap.data();
-
         setEmojis(saveData.emojis);
         setEmojiIds(saveData.emojiIds.split(",").map(Number));
         setSaveChatData(saveData.resultContent);
@@ -265,10 +257,6 @@ const ResultPage = () => {
     });
 
     window.location.href = "https://instagram.com/sn9tk";
-  };
-
-  const handleTypingComplete = () => {
-    setIsShowEmojis(true);
   };
   /** =============================================================================== */
   const signatureImageRef = useRef<HTMLDivElement>(null);
@@ -409,15 +397,11 @@ const ResultPage = () => {
 
   useEffect(() => {
     // emojiIds
-    console.log("emojiIds", emojiIds);
-
     if (!_.isNull(emojiIds)) {
       const filterList = emojiList.filter((emoji) => {
         // emojiIds.find((id) => id === emoji.id);
         return emojiIds.find((id) => id === emoji.id);
       });
-      console.log("filterList", filterList);
-
       setRandomData(filterList);
       // console.log("dddd", dddd);
     }
@@ -446,6 +430,8 @@ const ResultPage = () => {
 
   // console.log("dd", typeof emojis);
 
+  console.log("randomData", randomData);
+
   return (
     <div className="main_content">
       <div className="page_wrapper">
@@ -468,32 +454,23 @@ const ResultPage = () => {
                     className="description_wrapper"
                     style={{ marginBottom: "40px" }}
                   >
-                    <TypingEffect
-                      data={randomData}
-                      onComplete={handleTypingComplete}
-                    />
-                    {isShowEmojis && (
-                      <div className="description_emoji_wrapper">
-                        <div
-                          className="pb16 lh"
-                          style={{
-                            fontWeight: 700,
-                            fontSize: 18,
-                            marginTop: 32,
-                          }}
-                        >
-                          2025년 {nameParam}의 키워드
-                        </div>
-                        {randomData.map((item: Emoji, i: number) => (
-                          <span
-                            className="description_emoji pb16 lh"
-                            key={item.id}
-                          >
-                            {`${item.emoji}  ${item.symbol} `} {i < 4 && ` | `}
-                          </span>
-                        ))}
+                    <TypingEffect data={randomData} />
+                    <div className="description_emoji_wrapper">
+                      <div
+                        className="pb16 lh"
+                        style={{ fontWeight: 700, fontSize: 18, marginTop: 32 }}
+                      >
+                        2025년 {nameParam}의 키워드
                       </div>
-                    )}
+                      {randomData.map((item: Emoji, i: number) => (
+                        <span
+                          className="description_emoji pb16 lh"
+                          key={item.id}
+                        >
+                          {`${item.emoji}  ${item.symbol} `} {i < 4 && ` | `}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
@@ -501,7 +478,7 @@ const ResultPage = () => {
           )}
         </div>
       </div>
-      {isDone && isShowEmojis && (
+      {isDone && (
         <div className="tooltip_wrapper">
           <span style={{ marginRight: "100px" }} className="tooltip">
             <IosShareIcon onClick={handleClickShare} />
