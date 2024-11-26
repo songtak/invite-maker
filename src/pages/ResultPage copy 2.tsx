@@ -24,7 +24,6 @@ import { emojiList4 } from "../assets/emojis/emojiList4";
 import { emojiList5 } from "../assets/emojis/emojiList5";
 import { emojiList6 } from "../assets/emojis/emojiList6";
 import { stringLength } from "@firebase/util";
-import Typed from "react-typed";
 
 import TypingEffect from "../components/TypingEffect";
 
