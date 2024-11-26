@@ -459,7 +459,7 @@ const ResultPage = () => {
 
           {!_.isNull(randomData) && (
             <>
-              <div className="emoji">[{emojis}]</div>
+              <div className="emoji">{emojis}</div>
               <div className="chat ">
                 <p className="lh">{chatData}</p>
                 {isDone && (

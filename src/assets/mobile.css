@@ -71,9 +71,9 @@
     line-height: 1.6;
   }
   .emoji {
-    font-size: 40px;
-    letter-spacing: 16px;
-    padding: 16px;
+    font-size: 36px;
+    letter-spacing: 12px;
+    /* padding: 16px; */
   }
 
   .cute-button {

@@ -281,7 +281,7 @@ const MainPage = () => {
                 {/* <div className="pb16 lh" style={{ fontWeight: 700, fontSize: 18 }}>
               🥰 2025년 째웅이 운세 해석
             </div> */}
-                <div className="pb16 lh emoji">[💘💵🌳🌊🐶]</div>
+                <div className="pb16 emoji">💘💵🌳🌊🐶</div>
                 <TypingEffect data={jwList} onComplete={handleTypingComplete} />
                 {isShowEmojis && (
                   <>
