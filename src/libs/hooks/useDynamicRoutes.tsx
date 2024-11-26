@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 
 import { defaultRoutes, authRoutes, adminRoutes } from "@routes/mainRoute";
+import RouteChangeTracker from "../../routes/RouteChangeTracker";
 
 /* 사용자 상태에 따라 라우트 변경 */
 const useDynamicRoutes = () => {

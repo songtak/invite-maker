@@ -13,6 +13,7 @@ import _ from "lodash";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import SaveAltIcon from "@mui/icons-material/SaveAlt";
 import domtoimage from "dom-to-image";
+import ReactGA from "react-ga4";
 
 import { getResponseFromGPT } from "../services/api";
 import { emojiList1 } from "../assets/emojis/emojiList1";
@@ -204,7 +205,11 @@ const ResultPage = () => {
   };
 
   const handleClickShare = async () => {
-    console.log("handleClickShare");
+    ReactGA.event("공유하기_버튼_클릭", {
+      category: "share_button_click",
+      action: "공유하기 버튼 클릭",
+      label: `${dateParam}_${nameParam}`,
+    });
     if (isMobile()) {
       handleShare(); // 모바일: 공유하기
     } else {
@@ -212,8 +217,22 @@ const ResultPage = () => {
     }
   };
   const handleClickSave = () => {
-    console.log("handleClickSave");
+    ReactGA.event("저장하기_버튼_클릭", {
+      category: "save_button_click",
+      action: "저장하기 버튼 클릭",
+      label: `${dateParam}_${nameParam}`,
+    });
     createSignatureImage();
+  };
+
+  const handleClickSongtak = () => {
+    ReactGA.event("송탁_버튼_클릭", {
+      category: "songtak_button_click",
+      action: "송탁 버튼 클릭",
+      label: `${dateParam}_${nameParam}`,
+    });
+
+    window.location.href = "https://instagram.com/sn9tk";
   };
   /** =============================================================================== */
   const signatureImageRef = useRef<HTMLDivElement>(null);
@@ -338,6 +357,11 @@ const ResultPage = () => {
     scriptElement.current?.appendChild(script);
   }, []);
 
+  useEffect(() => {
+    ReactGA.set({ page: location.pathname });
+    ReactGA.send("pageview");
+  }, [location]);
+
   return (
     <div className="main_content">
       <div className="page_wrapper">
@@ -374,7 +398,7 @@ const ResultPage = () => {
         <span
           style={{ cursor: "pointer" }}
           onClick={() => {
-            window.location.href = "https://instagram.com/sn9tk";
+            handleClickSongtak();
           }}
         >
           made by songtak

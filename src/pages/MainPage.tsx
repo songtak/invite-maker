@@ -84,26 +84,12 @@ const MainPage = () => {
 
   // http://localhost:5173/
   const handleButtonClick = async () => {
-    ReactGA.event({
-      category: "start_button",
-      action: "click",
-      label: name,
-      value: 1,
+    ReactGA.event("알아보자_버튼_클릭", {
+      category: "result_button_click",
+      action: "알아보자 버튼 클릭",
+      label: `${selectedDate}_${name}`,
     });
-    // await setIsClicked(true);
-    // const emoji = getRandomEmojis(5);
-    // setEmojis(emoji);
-    // await getResponseFromGPT(
-    //   `친구 ${name}의 이모지가 이렇게 ${emoji} 5개가 나왔는데 이걸 토대로 2025년 운세를 해석해줘 무조건 긍정적인 방향으로 부탁해! 내용은 이모지(이모지 이름) 내용서술 줄바꿈 다음 이모지... 그리고 마지막엔 정리! 그리고 친구에게 말하듯 다정한 말투로 부탁하고 친구의 이름도 불러줘!`,
-    //   // `${emojis} 이 이모지 5개가 나왔는데 이걸 토대로 2025년 운세를 해석해줘 무조건 긍정적인 방향으로 부탁해! 그리고 친구한테 말하듯 서술적으로!`
-    //   (chunk: any) => {
-    //     setChatData((prev) => prev + chunk); // 스트리밍 데이터 추가
-    //   }
-    // );
-
     navigate(`/result?name=${name}&date=${selectedDate}`);
-
-    // setChatData(ddd);
   };
 
   const onChange = (e: any) => {
@@ -116,6 +102,25 @@ const MainPage = () => {
         handleButtonClick();
       }
     }
+  };
+
+  const handleClickJw = () => {
+    setIsJw(true);
+    ReactGA.event("째웅_버튼_클릭", {
+      category: "is_jw_button_click",
+      action: "째웅 버튼 클릭",
+      label: name,
+    });
+  };
+
+  const handleClickSongtak = async () => {
+    await ReactGA.event("송탁_버튼_클릭", {
+      category: "songtak_button_click",
+      action: "송탁 버튼 클릭",
+      label: "메인 페이지",
+    });
+
+    window.location.href = "https://instagram.com/sn9tk";
   };
 
   // function encodeAppKey(appKey: string, secretKey: string): string {
@@ -153,6 +158,11 @@ const MainPage = () => {
     /** @ts-ignore */
     scriptElement.current?.appendChild(script);
   }, []);
+
+  useEffect(() => {
+    ReactGA.set({ page: location.pathname });
+    ReactGA.send("pageview");
+  }, [location]);
 
   return (
     <>
@@ -250,13 +260,7 @@ const MainPage = () => {
               <div
                 className="jw-button"
                 onClick={() => {
-                  setIsJw(true);
-                  ReactGA.event({
-                    category: "is_jw_button",
-                    action: "click",
-                    label: "쨰웅",
-                    value: 1,
-                  });
+                  handleClickJw();
                 }}
               >
                 혹시? 김재웅이신가요?
@@ -336,7 +340,7 @@ const MainPage = () => {
           <span
             style={{ cursor: "pointer", paddingBottom: "24px" }}
             onClick={() => {
-              window.location.href = "https://instagram.com/sn9tk";
+              handleClickSongtak();
             }}
           >
             made by songtak

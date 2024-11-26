@@ -4,6 +4,7 @@ import ReactGA from "react-ga4";
 
 import useDynamicRoutes from "@libs/hooks/useDynamicRoutes";
 import ScrollToTop from "@libs/ScrollToTop";
+import RouteChangeTracker from "./RouteChangeTracker";
 import "../assets/web.css";
 import "../assets/mobile.css";
 import "../assets/common.css";
@@ -12,7 +13,6 @@ import "../assets/common.css";
 const MainRouter = () => {
   const router = useDynamicRoutes();
   const PUBLIC_GA_ID = `${import.meta.env.VITE_PUBLIC_GA_ID}`;
-
   useEffect(() => {
     ReactGA.initialize(`${PUBLIC_GA_ID}`);
   }, []);
