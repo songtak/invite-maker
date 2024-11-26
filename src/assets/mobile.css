@@ -47,15 +47,17 @@
     margin-top: 40px;
   }
   .title {
-    padding-top: 16px;
-    font-size: 32px;
-    font-weight: 500;
+    /* padding-top: 16px; */
+    font-size: 40px;
+
+    font-weight: 600;
     /* padding-bottom: 3px; */
     /* width: 730px; */
     text-align: center;
   }
   .title_sub {
-    font-size: 26px;
+    font-size: 24px;
+    font-weight: 500;
     /* padding-bottom: 30px; */
     /* width: 730px; */
     text-align: center;
@@ -71,6 +73,7 @@
     line-height: 1.6;
   }
   .emoji {
+    margin-bottom: 32px;
     font-size: 36px;
     letter-spacing: 12px;
     /* padding: 16px; */
@@ -166,14 +169,14 @@
     display: none; /* 스크롤바 숨김 */
   }
   .jw-button {
-    margin-top: 40px;
+    margin-top: 24px;
     background: linear-gradient(135deg, #000000, #000000);
     border: none;
     letter-spacing: 2px;
 
     border-radius: 50px;
-    padding: 12px 40px;
-    font-size: 0.7rem;
+    padding: 8px 24px;
+    font-size: 0.6rem;
     /* font-weight: bold; */
     color: #ffffff;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);

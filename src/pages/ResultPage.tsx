@@ -282,7 +282,7 @@ const ResultPage = () => {
     }
 
     await domtoimage
-      .toJpeg(signatureImageRef.current, { cacheBust: true, quality: 0.95 })
+      .toJpeg(signatureImageRef.current, { cacheBust: true, quality: 1 })
       .then((dataUrl: string) => {
         const isIOS = /iP(ad|hone|od)/i.test(navigator.userAgent);
 
@@ -337,7 +337,7 @@ const ResultPage = () => {
     return (
       <div className="save_image_wrapper" ref={signatureImageRef}>
         <div className="save_image_title" style={{ paddingBottom: "14px" }}>
-          2025년
+          🫧 2025 🐍
         </div>
         <div style={{ marginBottom: 16 }}>
           <div className="save_image_title_sub">{name}에게</div>
@@ -347,7 +347,7 @@ const ResultPage = () => {
         <div>
           <div></div>
           <div
-            style={{ color: "#ff8800", fontSize: "12px" }}
+            style={{ color: "#ff8800", fontSize: "18px" }}
           >{`✨ https://www.emoji2025.site/result?name=${nameParam}&date=${dateParam} ✨`}</div>
           {/* <p className="save_image_chat">{saveChatData}</p> */}
         </div>
@@ -407,18 +407,13 @@ const ResultPage = () => {
   }, []);
 
   useEffect(() => {
-    // emojiIds
-    console.log("emojiIds", emojiIds);
-
     if (!_.isNull(emojiIds)) {
       const filterList = emojiList.filter((emoji) => {
         // emojiIds.find((id) => id === emoji.id);
         return emojiIds.find((id) => id === emoji.id);
       });
-      console.log("filterList", filterList);
 
       setRandomData(filterList);
-      // console.log("dddd", dddd);
     }
   }, [emojiIds]);
 
@@ -450,16 +445,18 @@ const ResultPage = () => {
       <div className="page_wrapper">
         <div className="title-wrapper">
           <div className="title" style={{ paddingBottom: "14px" }}>
-            2025
+            🫧 2025 🐍
           </div>
-          <div style={{ marginBottom: 16 }}>
+          <div style={{ marginBottom: 24 }}>
             <div className="title_sub">{name}에게</div>
             <div className="title_sub">일어날 좋은 일들!</div>
           </div>
 
           {!_.isNull(randomData) && (
             <>
-              <div className="emoji">{emojis}</div>
+              <div className="emoji" style={{ marginBottom: 24 }}>
+                {emojis}
+              </div>
               <div className="chat ">
                 <p className="lh">{chatData}</p>
                 {isDone && (
@@ -488,7 +485,11 @@ const ResultPage = () => {
                             className="description_emoji pb16 lh"
                             key={item.id}
                           >
-                            {`${item.emoji}  ${item.symbol} `} {i < 4 && ` | `}
+                            {`  ${item.emoji}  ${item.symbol} `}
+
+                            <span style={{ fontWeight: 500 }}>
+                              {i < 4 && `   | `}
+                            </span>
                           </span>
                         ))}
                       </div>
@@ -512,6 +513,7 @@ const ResultPage = () => {
           </span>
         </div>
       )}
+
       <div
         className="songtak"
         style={{ paddingBottom: "24px", paddingTop: "24px" }}

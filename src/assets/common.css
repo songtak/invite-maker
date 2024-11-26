@@ -19,8 +19,9 @@ html {
 }
 .save_image_title {
   font-size: 2rem;
-  padding-top: 40px;
+  padding-top: 20px;
   padding-bottom: 20px;
+  font-weight: 700;
   /* width: 730px; */
   text-align: center;
 }

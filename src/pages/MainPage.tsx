@@ -177,9 +177,18 @@ const MainPage = () => {
       <div className="main_content">
         <div className="page_wrapper">
           <div className="title-wrapper">
-            <div className="title" style={{ paddingBottom: "14px" }}>
-              2025
-            </div>
+            {!isJw ? (
+              <div
+                className="title"
+                style={{ paddingBottom: "14px", paddingTop: "80px" }}
+              >
+                🫧 2025 🐍
+              </div>
+            ) : (
+              <div className="title" style={{ paddingBottom: "14px" }}>
+                🫧 2025 🐍
+              </div>
+            )}
             {!isJw ? (
               isClicked ? (
                 <div style={{ marginBottom: 16 }}>
@@ -281,7 +290,9 @@ const MainPage = () => {
                 {/* <div className="pb16 lh" style={{ fontWeight: 700, fontSize: 18 }}>
               🥰 2025년 째웅이 운세 해석
             </div> */}
-                <div className="pb16 emoji">💘💵🌳🌊🐶</div>
+                <div className=" emoji" style={{ marginBottom: "32px" }}>
+                  💘💵🌳🌊🐶
+                </div>
                 <TypingEffect data={jwList} onComplete={handleTypingComplete} />
                 {isShowEmojis && (
                   <>

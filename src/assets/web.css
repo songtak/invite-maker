@@ -27,11 +27,12 @@
   }
   .title-wrapper {
     /* padding-bottom: 80px; */
-    margin-top: 120px;
+    margin-top: 60px;
   }
   .title {
     font-size: 40px;
     padding-bottom: 20px;
+    font-weight: 700;
     /* width: 730px; */
     text-align: center;
     padding-top: 32px;
@@ -130,8 +131,8 @@
     letter-spacing: 2px;
 
     border-radius: 50px;
-    padding: 12px 40px;
-    font-size: 0.7rem;
+    padding: 8px 24px;
+    font-size: 0.6rem;
     /* font-weight: bold; */
     color: #ffffff;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
