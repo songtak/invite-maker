@@ -246,24 +246,31 @@ const ResultPage = () => {
         // Blob 생성
         const blob = new Blob([new Uint8Array(array)], { type: mimeType });
 
-        // URL 생성
-        const blobUrl = URL.createObjectURL(blob);
-
         // iOS Safari 처리
         const isIOS = /iP(ad|hone|od)/i.test(navigator.userAgent);
         if (isIOS) {
-          window.open(blobUrl, "_blank"); // 새 창으로 열기
+          // Base64 데이터 새 창으로 열기
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const base64Url = reader.result as string;
+            const newTab = window.open();
+            if (newTab) {
+              newTab.document.body.innerHTML = `<img src="${base64Url}" style="width: 100%; height: auto;" alt="signature" />`;
+            }
+          };
+          reader.readAsDataURL(blob); // Blob 데이터를 Base64 URL로 변환
         } else {
           // 일반 브라우저 다운로드 처리
+          const blobUrl = URL.createObjectURL(blob);
           const link = document.createElement("a");
           link.href = blobUrl;
           link.download = `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`;
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
-        }
 
-        URL.revokeObjectURL(blobUrl); // 메모리 정리
+          URL.revokeObjectURL(blobUrl); // 메모리 정리
+        }
       })
       .catch((e: any) => {
         console.log("createSignatureImage / ERROR", e);
@@ -382,7 +389,7 @@ const ResultPage = () => {
           data-ad-height="50"
         />
       </div>
-      <div ref={scriptElement} style={{ width: "-webkit-fill-available" }}>
+      {/* <div ref={scriptElement} style={{ width: "-webkit-fill-available" }}>
         <ins
           className="kakao_ad_area"
           style={{ display: "none" }}
@@ -390,7 +397,7 @@ const ResultPage = () => {
           data-ad-width="728"
           data-ad-height="90"
         />
-      </div>
+      </div> */}
       {/* 다운로드용 이미지가 화면에 안보이도록 설정 */}
       <div className="save_image_hide">{signatureImageHtml()}</div>
       {/* <div className="">{signatureImageHtml()}</div> */}

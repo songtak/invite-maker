@@ -4,11 +4,12 @@
     width: 50%;
     padding-left: 25%;
     padding-right: 25%;
-    height: calc(100vh - 50px);
+    height: calc(100vh);
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: rgb(255, 255, 255);
+    min-height: 800px;
   }
 
   .main_wrapper {
@@ -19,13 +20,14 @@
   .main_content {
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
     flex-direction: column;
     text-align: center;
-    height: inherit;
+    height: 100%;
   }
   .title-wrapper {
     /* padding-bottom: 80px; */
+    margin-top: 120px;
   }
   .title {
     font-size: 40px;

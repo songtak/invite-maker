@@ -18,14 +18,16 @@
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
+    /* min-width: 300px; */
   }
 
   .main_content {
-    height: calc(100% - 50px);
+    /* height: calc(100% - 50px); */
+    height: 100%;
     display: flex;
     place-items: center;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     overflow: auto;
   }
@@ -42,7 +44,7 @@
   .page_wrapper {
   }
   .title-wrapper {
-    /* padding-bottom: 80px; */
+    margin-top: 40px;
   }
   .title {
     padding-top: 16px;

@@ -342,19 +342,18 @@ const MainPage = () => {
             made by songtak
           </span>
         </div>
-      </div>
-      {!isJw && (
-        <>
-          <div ref={scriptElement}>
-            <ins
-              className="kakao_ad_area"
-              style={{ display: "none" }}
-              data-ad-unit="DAN-jBHD2oE0XAGRAFIb"
-              data-ad-width="320"
-              data-ad-height="50"
-            />
-          </div>
-          <div ref={scriptElement} style={{ width: "-webkit-fill-available" }}>
+        {!isJw && (
+          <>
+            <div ref={scriptElement}>
+              <ins
+                className="kakao_ad_area"
+                style={{ display: "none" }}
+                data-ad-unit="DAN-jBHD2oE0XAGRAFIb"
+                data-ad-width="320"
+                data-ad-height="50"
+              />
+            </div>
+            {/* <div ref={scriptElement} style={{ width: "-webkit-fill-available" }}>
             <ins
               className="kakao_ad_area"
               style={{ display: "none" }}
@@ -362,9 +361,10 @@ const MainPage = () => {
               data-ad-width="728"
               data-ad-height="90"
             />
-          </div>
-        </>
-      )}
+          </div> */}
+          </>
+        )}
+      </div>
     </>
   );
 };
