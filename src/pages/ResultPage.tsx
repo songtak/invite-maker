@@ -14,7 +14,7 @@ import IosShareIcon from "@mui/icons-material/IosShare";
 import SaveAltIcon from "@mui/icons-material/SaveAlt";
 import domtoimage from "dom-to-image";
 import ReactGA from "react-ga4";
-
+import dayjs from "dayjs";
 import { getResponseFromGPT } from "../services/api";
 import { emojiList1 } from "../assets/emojis/emojiList1";
 import { emojiList2 } from "../assets/emojis/emojiList2";
@@ -37,6 +37,7 @@ type Result = {
   date: string;
   resultContent: string;
   emojis: string;
+  check_date: string;
 };
 
 const ResultPage = () => {
@@ -45,6 +46,7 @@ const ResultPage = () => {
   const [emojis, setEmojis] = useState<string[]>([""]);
   const [chatData, setChatData] = useState<string>("");
   const [isDone, setIsDone] = useState<boolean>(false);
+  const now = dayjs();
 
   const searchParams = new URLSearchParams(location.search.slice(1));
   const nameParam = searchParams.get("name");
@@ -107,10 +109,11 @@ const ResultPage = () => {
 
     if (response) {
       addResultWithCustomDocName({
-        name: name as string,
-        date: date as string,
+        name: nameParam as string,
+        date: dateParam as string,
         resultContent: chat as string,
         emojis: emoji.join(""),
+        check_date: now.format("YYYY-MM-DD"),
       });
       setIsDone(true);
     }
