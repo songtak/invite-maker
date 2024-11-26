@@ -2,6 +2,8 @@ import CryptoJS from "crypto-js";
 
 const DEC_KEY = `${import.meta.env.VITE_DEC_KEY}`;
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export const getResponseFromGPT = async (prompt: any, setChatData: any) => {
   const api_key =
     "/Ll851pdxEJb+rBDNWF9QpeZH5T8h+xguI0Nc6HnRnm6u+5XerLBNp9e7ybzmQtF3xiQDRsuub49FGs1y1VOhW3g37r/BHEk+eF65RcJPuxbNtJqpFlDZ/pWSPLJ5ILj37in9LZxYtGa1Wlxf0TOca+6oveIcuLjO2hkHBhY0yiLfzoavpGg+PpW+fWUvX1zT9RpHEbBqI0DLcs3JM74+Az4ajrCrya7C0/Q6PFJB9s=";
@@ -15,6 +17,7 @@ export const getResponseFromGPT = async (prompt: any, setChatData: any) => {
 
     return decrypted.toString(CryptoJS.enc.Utf8); // UTF-8 형식으로 반환
   }
+
   const OPENAI_ENDPOINT = "https://api.openai.com/v1/chat/completions";
 
   const response = await fetch(OPENAI_ENDPOINT, {
@@ -25,7 +28,6 @@ export const getResponseFromGPT = async (prompt: any, setChatData: any) => {
     },
     body: JSON.stringify({
       model: "gpt-4o",
-      // model: "gpt-4",
       messages: [
         {
           role: "user",
@@ -69,6 +71,9 @@ export const getResponseFromGPT = async (prompt: any, setChatData: any) => {
             const newContent = accumulatedText.slice(previousLength); // 이전 길이 이후의 새 텍스트만 추출
             previousLength = accumulatedText.length; // 업데이트된 길이 저장
             setChatData(newContent); // 새로운 텍스트만 전달
+
+            // 60ms 딜레이 추가
+            await sleep(60);
           }
         } catch (error) {
           console.error("Error parsing JSON:", error);
@@ -78,5 +83,4 @@ export const getResponseFromGPT = async (prompt: any, setChatData: any) => {
   }
 
   return true;
-  // return response;
 };

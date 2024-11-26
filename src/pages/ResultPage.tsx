@@ -45,6 +45,7 @@ const ResultPage = () => {
   const [date, setDate] = useState<string | null>(null);
   const [emojis, setEmojis] = useState<string[]>([""]);
   const [chatData, setChatData] = useState<string>("");
+  const [saveChatData, setSaveChatData] = useState<string>("");
   const [isDone, setIsDone] = useState<boolean>(false);
   const now = dayjs();
 
@@ -134,7 +135,7 @@ const ResultPage = () => {
       if (docSnap.exists()) {
         const saveData = docSnap.data();
         setEmojis(saveData.emojis);
-        setChatData(saveData.resultContent);
+        setSaveChatData(saveData.resultContent);
         setIsDone(true);
 
         return true;
@@ -315,7 +316,7 @@ const ResultPage = () => {
         </div>
         <div className="save_image_emoji">{emojis}</div>
         <div>
-          <p className="save_image_chat">{chatData}</p>
+          <p className="save_image_chat">{saveChatData}</p>
         </div>
         <div
           className="songtak"
@@ -326,6 +327,24 @@ const ResultPage = () => {
       </div>
     );
   };
+
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (saveChatData.length > 0) {
+      const typingInterval = setInterval(() => {
+        setChatData((prevTitleValue) => prevTitleValue + saveChatData[count]);
+        setCount((prevCount) => prevCount + 1);
+      }, 60);
+
+      if (count > 0 && count === saveChatData.length) {
+        clearInterval(typingInterval);
+      }
+      return () => {
+        clearInterval(typingInterval);
+      };
+    }
+  }, [saveChatData, count]);
 
   /** =============================================================================== */
 
