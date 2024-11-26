@@ -186,7 +186,7 @@ const MainPage = () => {
               </div>
             ) : (
               <div className="title" style={{ paddingBottom: "14px" }}>
-                🫧 2025 🐍
+                2025
               </div>
             )}
             {!isJw ? (

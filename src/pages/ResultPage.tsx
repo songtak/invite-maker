@@ -418,18 +418,55 @@ const ResultPage = () => {
   }, [emojiIds]);
 
   /** =============================================================================== */
-  /** 카카오 애드핏 광고 */
-  const scriptElement = useRef(null);
+  // /** 카카오 애드핏 광고 */
+  // const scriptElement = useRef(null);
+
+  // useEffect(() => {
+  //   const script = document.createElement("script");
+  //   script.setAttribute("src", "https://t1.daumcdn.net/kas/static/ba.min.js");
+  //   script.setAttribute("charset", "utf-8");
+
+  //   script.setAttribute("async", "true");
+  //   /** @ts-ignore */
+  //   scriptElement.current?.appendChild(script);
+  // }, []);
+
+  // const scriptElement = useRef(null);
+
+  // useEffect(() => {
+  //   const script = document.createElement("script");
+  //   script.setAttribute("src", "https://t1.daumcdn.net/kas/static/ba.min.js");
+  //   script.setAttribute("charset", "utf-8");
+  //   // scriptElement.current?.appendChild(script);
+  //   if (scriptElement.current) {
+  //     scriptElement.current?.appendChild(script);
+  //   }
+
+  //   return () => {
+  //     const globalAdfit = window.adfit;
+  //     if (globalAdfit) globalAdfit.destroy("DAN-jBHD2oE0XAGRAFIb");
+  //   };
+  // }, []);
+
+  const scriptElement = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const script = document.createElement("script");
     script.setAttribute("src", "https://t1.daumcdn.net/kas/static/ba.min.js");
     script.setAttribute("charset", "utf-8");
 
-    script.setAttribute("async", "true");
-    /** @ts-ignore */
-    scriptElement.current?.appendChild(script);
+    // scriptElement.current 타입 체크 후 appendChild 호출
+    if (scriptElement.current) {
+      scriptElement.current.appendChild(script);
+    }
+
+    return () => {
+      // adfit 객체가 존재할 경우 destroy 호출
+      const globalAdfit = (window as any).adfit;
+      if (globalAdfit) globalAdfit.destroy("DAN-jBHD2oE0XAGRAFIb");
+    };
   }, []);
+
   /** =============================================================================== */
 
   useEffect(() => {
@@ -445,7 +482,7 @@ const ResultPage = () => {
       <div className="page_wrapper">
         <div className="title-wrapper">
           <div className="title" style={{ paddingBottom: "14px" }}>
-            🫧 2025 🐍
+            2025
           </div>
           <div style={{ marginBottom: 24 }}>
             <div className="title_sub">{name}에게</div>
