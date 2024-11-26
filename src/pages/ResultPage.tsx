@@ -272,6 +272,7 @@ const ResultPage = () => {
         } else {
           // 일반 브라우저 다운로드 처리
           const [header, base64Data] = dataUrl.split(",");
+          /** @ts-ignore */
           const mimeType = header?.match(/:(.*?);/)[1];
           const binary = atob(base64Data);
           const array = [];
