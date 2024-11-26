@@ -220,48 +220,48 @@ const ResultPage = () => {
 
   /**
    * @function
-   * @description 첨부용 서명 이미지 생성
+   * @description 다운로드 이미지 생성
    */
   const createSignatureImage = useCallback(async () => {
     if (signatureImageRef.current === null) {
       return;
     }
+
     await domtoimage
       .toJpeg(signatureImageRef.current, { cacheBust: true, quality: 0.95 })
       .then((dataUrl: string) => {
-        // Base64 데이터에서 헤더와 데이터 분리
-        const [header, base64Data] = dataUrl.split(",");
-
-        // MIME 타입 추출
-        /** @ts-ignore */
-        const mimeType = header?.match(/:(.*?);/)[1];
-
-        // Base64 데이터를 바이너리로 변환
-        const binary = atob(base64Data);
-        const array = [];
-        for (let i = 0; i < binary.length; i++) {
-          array.push(binary.charCodeAt(i));
-        }
-
-        // Blob 생성
-        const blob = new Blob([new Uint8Array(array)], { type: mimeType });
-
-        // iOS Safari 처리
         const isIOS = /iP(ad|hone|od)/i.test(navigator.userAgent);
+
         if (isIOS) {
-          // Base64 데이터 새 창으로 열기
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            const base64Url = reader.result as string;
-            const newTab = window.open();
-            if (newTab) {
-              newTab.document.body.innerHTML = `<img src="${base64Url}" style="width: 100%; height: auto;" alt="signature" />`;
-            }
-          };
-          reader.readAsDataURL(blob); // Blob 데이터를 Base64 URL로 변환
+          // iOS에서는 Base64 데이터를 직접 새로운 페이지에서 표시
+          const newTab = window.open();
+          if (newTab) {
+            newTab.document.body.style.margin = "0";
+            newTab.document.body.style.display = "flex";
+            newTab.document.body.style.justifyContent = "center";
+            newTab.document.body.style.alignItems = "center";
+
+            const img = newTab.document.createElement("img");
+            img.src = dataUrl;
+            img.style.maxWidth = "100%";
+            img.style.height = "auto";
+
+            newTab.document.body.appendChild(img);
+          } else {
+            alert("새 창을 열 수 없습니다. 팝업 차단을 해제해주세요.");
+          }
         } else {
           // 일반 브라우저 다운로드 처리
+          const [header, base64Data] = dataUrl.split(",");
+          const mimeType = header?.match(/:(.*?);/)[1];
+          const binary = atob(base64Data);
+          const array = [];
+          for (let i = 0; i < binary.length; i++) {
+            array.push(binary.charCodeAt(i));
+          }
+          const blob = new Blob([new Uint8Array(array)], { type: mimeType });
           const blobUrl = URL.createObjectURL(blob);
+
           const link = document.createElement("a");
           link.href = blobUrl;
           link.download = `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`;
