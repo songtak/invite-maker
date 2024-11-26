@@ -33,7 +33,7 @@ export const getResponseFromGPT = async (prompt: any, setChatData: any) => {
         },
       ],
       stream: true,
-      max_tokens: 600,
+      max_tokens: 1000,
       temperature: 0.9,
     }),
   });
