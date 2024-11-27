@@ -342,19 +342,53 @@ const ResultPage = () => {
           <div className="save_image_title_sub">{name}에게</div>
           <div className="save_image_title_sub">일어날 좋은 일들!</div>
         </div>
+        <div className="lh">{chatData}</div>
+
         <div className="save_image_emoji">{emojis}</div>
+
         <div>
-          <div></div>
+          <div>
+            {randomData?.map((item: Emoji, i: number) => (
+              <div key={i} className={`lh ${isMobile() ? "pb24" : "pb36"}`}>
+                {item.description}
+              </div>
+            ))}
+          </div>
+          <div className="description_emoji_wrapper">
+            <div
+              className="pb16 lh"
+              style={{
+                fontWeight: 700,
+                fontSize: 18,
+                marginTop: 32,
+              }}
+            >
+              2025년 {nameParam}의 키워드
+            </div>
+            {randomData?.map((item: Emoji, i: number) => (
+              <span className="description_emoji pb16 lh" key={item.id}>
+                {`  ${item.emoji}  ${item.symbol} `}
+
+                <span style={{ fontWeight: 500 }}>{i < 4 && `   | `}</span>
+              </span>
+            ))}
+          </div>
           <div
-            style={{ color: "#ff8800", fontSize: "18px" }}
-          >{`✨ https://www.emoji2025.site/result?name=${nameParam}&date=${dateParam} ✨`}</div>
-          {/* <p className="save_image_chat">{saveChatData}</p> */}
-        </div>
-        <div
-          className="songtak"
-          style={{ paddingBottom: "24px", paddingTop: "24px" }}
-        >
-          <span style={{ color: "#555555", fontSize: "12px", fontWeight: 500 }}>
+            className="songtak"
+            style={{ paddingBottom: "24px", paddingTop: "24px" }}
+          >
+            <div
+              style={{ color: "#ff8800", fontSize: "14px" }}
+            >{`✨ https://www.emoji2025.site/result?name=${nameParam}&date=${dateParam} ✨`}</div>
+            {/* <p className="save_image_chat">{saveChatData}</p> */}
+          </div>
+          <span
+            style={{
+              color: "#555555",
+              fontSize: "12px",
+              fontWeight: 500,
+            }}
+          >
             @sn9tk
           </span>
         </div>
@@ -598,8 +632,8 @@ const ResultPage = () => {
         </div>
       )}
       {/* 다운로드용 이미지가 화면에 안보이도록 설정 */}
-      <div className="save_image_hide">{signatureImageHtml()}</div>
-      {/* <div className="">{signatureImageHtml()}</div> */}
+      {/* <div className="save_image_hide">{signatureImageHtml()}</div> */}
+      <div className="">{signatureImageHtml()}</div>
     </div>
   );
 };
