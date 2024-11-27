@@ -236,15 +236,15 @@ const ResultPage = () => {
       { type: mime }
     );
 
-    if (navigator.share) {
-      navigator.share({
-        title: "🫧2025 나에게 일어날 좋은 일들🐍",
-        text: `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`,
-        files: [file],
-      });
-    } else {
-      alert("공유하기가 지원되지 않는 환경 입니다.");
-    }
+    // if (navigator.share) {
+    //   navigator.share({
+    //     title: "🫧2025 나에게 일어날 좋은 일들🐍",
+    //     text: `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`,
+    //     files: [file],
+    //   });
+    // } else {
+    //   alert("공유하기가 지원되지 않는 환경 입니다.");
+    // }
 
     if (navigator.share) {
       try {
