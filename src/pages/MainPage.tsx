@@ -38,7 +38,7 @@ const MainPage = () => {
   };
 
   const onChange = (e: any) => {
-    setName(e.target.value);
+    e.target.value.length < 10 && setName(e.target.value.trim());
   };
 
   const onCheckEnter = (e: any) => {
@@ -138,6 +138,7 @@ const MainPage = () => {
                 onCheckEnter(e);
               }}
               placeholder="이름"
+              value={name}
               onChange={onChange}
               size="small"
 

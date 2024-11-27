@@ -328,6 +328,7 @@ const ResultPage = () => {
       })
       .catch((e: any) => {
         console.log("createSignatureImage / ERROR", e);
+        alert("브라우저에서 지원하지 않습니다.");
       });
   }, [signatureImageRef]);
 
