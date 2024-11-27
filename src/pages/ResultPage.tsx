@@ -238,7 +238,7 @@ const ResultPage = () => {
 
     if (navigator.share) {
       navigator.share({
-        title: "🫧2025🐍",
+        title: "🫧2025 나에게 일어날 좋은 일들🐍",
         text: `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`,
         files: [file],
       });
@@ -246,20 +246,21 @@ const ResultPage = () => {
       alert("공유하기가 지원되지 않는 환경 입니다.");
     }
 
-    // if (navigator.share) {
-    //   try {
-    //     await navigator.share({
-    //       title: `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`,
-    //       text: "🫧🫧🐍🐍",
-    //       url: window.location.href,
-    //     });
-    //   } catch (error) {
-    //     console.error("공유 실패:", error);
-    //   }
-    // } else {
-    //   alert("공유하기 기능을 지원하지 않는 브라우저입니다. 링크를 복사합니다.");
-    //   copyToClipboard();
-    // }
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "🫧2025 나에게 일어날 좋은 일들🐍",
+          text: "이모지로 보는 ${nameParam}의 2025년 긍정 파워!",
+          // files: [file],
+          url: window.location.href,
+        });
+      } catch (error) {
+        console.error("공유 실패:", error);
+      }
+    } else {
+      alert("공유하기 기능을 지원하지 않는 브라우저입니다. 링크를 복사합니다.");
+      copyToClipboard();
+    }
   };
 
   const handleClickShare = async () => {
