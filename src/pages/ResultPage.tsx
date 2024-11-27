@@ -369,7 +369,7 @@ const ResultPage = () => {
       const typingInterval = setInterval(() => {
         setChatData((prevTitleValue) => prevTitleValue + saveChatData[count]);
         setCount((prevCount) => prevCount + 1);
-      }, 60);
+      }, 50);
 
       if (count > 0 && count === saveChatData.length) {
         setIsDone(true);
@@ -395,7 +395,7 @@ const ResultPage = () => {
         } else {
           setIntroCount1((prev) => prev + 1);
         }
-      }, 60);
+      }, 50);
 
       return () => clearInterval(typingInterval1);
     }
@@ -411,7 +411,7 @@ const ResultPage = () => {
         } else {
           setIntroCount2((prev) => prev + 1);
         }
-      }, 60);
+      }, 50);
 
       return () => clearInterval(typingInterval2);
     }

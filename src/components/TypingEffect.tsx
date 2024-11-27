@@ -38,7 +38,7 @@ const TypingEffect: React.FC<TypingEffectProps> = ({ data, onComplete }) => {
         const nextTimer = setTimeout(() => {
           setCurrentIndex((prev) => prev + 1);
           setCharIndex(0);
-        }, 1000); // 항목 간 대기 시간 (밀리초)
+        }, 200); // 항목 간 대기 시간 (밀리초)
         return () => clearTimeout(nextTimer);
       }
     } else if (onComplete) {

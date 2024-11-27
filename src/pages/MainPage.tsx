@@ -25,6 +25,8 @@ const MainPage = () => {
   };
   const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
 
+  const today = dayjs();
+
   // http://localhost:5173/
   const handleButtonClick = async () => {
     ReactGA.event("알아보자_버튼_클릭", {
@@ -150,6 +152,7 @@ const MainPage = () => {
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
                   label="생년월일"
+                  defaultValue={today.subtract(31, "year")}
                   value={selectedDate === null ? null : dayjs(selectedDate)}
                   onChange={(newValue: any) => {
                     setSelectedDate(dayjs(newValue).format("YYYY-MM-DD"));
@@ -159,6 +162,7 @@ const MainPage = () => {
                   slotProps={{
                     textField: {
                       // onChange: () => {},
+                      value: selectedDate === null ? null : dayjs(selectedDate),
                       placeholder: "생년월일",
                       label: "",
                       style: { width: "240px" },
