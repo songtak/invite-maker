@@ -632,8 +632,8 @@ const ResultPage = () => {
         </div>
       )}
       {/* 다운로드용 이미지가 화면에 안보이도록 설정 */}
-      {/* <div className="save_image_hide">{signatureImageHtml()}</div> */}
-      <div className="">{signatureImageHtml()}</div>
+      <div className="save_image_hide">{signatureImageHtml()}</div>
+      {/* <div className="">{signatureImageHtml()}</div> */}
     </div>
   );
 };
