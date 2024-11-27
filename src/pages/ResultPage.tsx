@@ -119,7 +119,7 @@ const ResultPage = () => {
   const getEmojiResult = async () => {
     let chat: any;
     const randomEmojis = getRandomEmojis(5);
-    const randomIntroduction = Math.floor(Math.random() * 10) + 1;
+    const randomIntroduction = Math.floor(Math.random() * 20) + 1;
     const emoji = randomEmojis.map((item) => item.emoji);
     const emojiIds = randomEmojis.map((item) => item.id);
 
