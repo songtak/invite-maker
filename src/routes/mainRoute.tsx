@@ -3,6 +3,7 @@ import { RouteObject } from "react-router";
 import ErrorPage from "@pages/common/ErrorPage";
 import MainPage from "@pages/MainPage";
 import ResultPage from "@pages/ResultPage";
+import JwPage from "@pages/JwPage";
 import LoginPage from "@pages/LoginPage";
 import AuthTestPage from "@pages/AuthTestPage";
 import AuthLayout from "@/components/layouts/AuthLayout";
@@ -24,13 +25,13 @@ const authRoutes: RouteObject[] = [
     errorElement: <ErrorPage />,
   },
   {
-    path: "/invite-maker",
-    element: <MainPage />,
+    path: "/result",
+    element: <ResultPage />,
     errorElement: <ErrorPage />,
   },
   {
-    path: "/result",
-    element: <ResultPage />,
+    path: "/jw",
+    element: <JwPage />,
     errorElement: <ErrorPage />,
   },
   {

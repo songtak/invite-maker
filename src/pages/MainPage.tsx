@@ -10,81 +10,21 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import "dayjs/locale/ko";
 import dayjs from "dayjs";
+import _ from "lodash";
 
-import { getResponseFromGPT } from "../services/api";
-import { emojiList1 } from "../assets/emojis/emojiList1";
-import { emojiList2 } from "../assets/emojis/emojiList2";
-import { emojiList3 } from "../assets/emojis/emojiList3";
-import { emojiList4 } from "../assets/emojis/emojiList4";
-import { emojiList5 } from "../assets/emojis/emojiList5";
-import { emojiList6 } from "../assets/emojis/emojiList6";
 import { jwList } from "../assets/jw";
-import { width } from "@mui/system";
 import TypingEffect from "../components/TypingEffect";
-
-type Emoji = { id: number; emoji: string };
 
 const MainPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-
-  const [isClicked, setIsClicked] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
-  const [emojis, setEmojis] = useState<string[]>([""]);
-  const [chatData, setChatData] = useState<string>("");
-  const [isJw, setIsJw] = useState<boolean>(false);
-  const [isShowEmojis, setIsShowEmojis] = useState<boolean>(false);
-
-  // 사랑 돈 나무 바다 강아지
-  // 💘, 💵, 🌳, 🌊, 🐶
-
-  const emojiList = [
-    ...emojiList1,
-    ...emojiList2,
-    ...emojiList3,
-    ...emojiList4,
-    ...emojiList5,
-    ...emojiList6,
-  ];
 
   ReactGA.send({
     hitType: "pageview",
     page: location.pathname, // useRouter를 사용하여, pathname값을 가져옵니다.
   });
-
-  const getRandomEmojis = (count: number): string[] => {
-    // 1. 모든 ID를 배열로 추출
-    const availableIds = emojiList.map((e) => e.id);
-
-    // 2. 랜덤 ID 생성 함수
-    const getRandomId = (): number => {
-      return Math.floor(Math.random() * 500) + 1; // 1부터 500까지
-    };
-
-    // 3. 랜덤 이모지 가져오기
-    const selectedEmojis: string[] = [];
-
-    while (selectedEmojis.length < count) {
-      // 랜덤 ID 생성
-      const randomIds = Array.from(
-        { length: count - selectedEmojis.length },
-        getRandomId
-      );
-
-      // 유효한 ID만 필터링
-      const validIds = randomIds.filter((id) => availableIds.includes(id));
-
-      // ID를 기반으로 이모지를 추가
-      validIds.forEach((id) => {
-        const emoji = emojiList.find((e) => e.id === id)?.emoji;
-        if (emoji) selectedEmojis.push(emoji);
-      });
-    }
-
-    return selectedEmojis;
-  };
 
   // http://localhost:5173/
   const handleButtonClick = async () => {
@@ -102,14 +42,13 @@ const MainPage = () => {
 
   const onCheckEnter = (e: any) => {
     if (e.key === "Enter") {
-      if (!isClicked) {
-        handleButtonClick();
-      }
+      handleButtonClick();
     }
   };
 
   const handleClickJw = () => {
-    setIsJw(true);
+    // setIsJw(true);
+    navigate("/jw");
     ReactGA.event("째웅_버튼_클릭", {
       category: "is_jw_button_click",
       action: "째웅 버튼 클릭",
@@ -125,10 +64,6 @@ const MainPage = () => {
     });
 
     window.location.href = "https://instagram.com/sn9tk";
-  };
-
-  const handleTypingComplete = () => {
-    setIsShowEmojis(true);
   };
 
   // function encodeAppKey(appKey: string, secretKey: string): string {
@@ -177,154 +112,90 @@ const MainPage = () => {
       navigator.userAgent
     );
   };
+  const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
 
   return (
     <>
       <div className="main_content">
         <div className="page_wrapper">
           <div className="title-wrapper">
-            {!isJw ? (
-              <div
-                className="title"
-                style={{ paddingBottom: "14px", paddingTop: "20px" }}
-              >
-                🫧 2025 🐍
-              </div>
-            ) : (
-              <div className="title" style={{ paddingBottom: "14px" }}>
-                2025
-              </div>
-            )}
-            {!isJw ? (
-              isClicked ? (
-                <div style={{ marginBottom: 16 }}>
-                  <div className="title_sub">{name}에게</div>
-                  <div className="title_sub">일어날 좋은 일들!</div>
-                </div>
-              ) : (
-                <div className="title_sub">내게 일어날 좋은 일들!</div>
-              )
-            ) : (
-              <div>
-                <div className="title_sub">🥰째웅에게</div>
-                <div className="title_sub">일어날 좋은 일들!</div>
-              </div>
-            )}
-          </div>
-          {/* <div className="title_sub">5가지!</div> */}
-          {/* <img src="/assets/images/emo1.jpeg" /> */}
-          {isClicked && !isJw && (
-            <>
-              <div className="emoji">{emojis}</div>
-              <p className="chat lh">{chatData}</p>
-            </>
-          )}
-          {!isClicked && !isJw && (
             <div
-              style={{
-                paddingTop: "40px",
-                display: "grid",
-                placeItems: "center",
+              className="title"
+              style={{ paddingBottom: "14px", paddingTop: "20px" }}
+            >
+              🫧 2025 🐍
+            </div>
+          </div>
+
+          <div
+            style={{
+              paddingTop: "40px",
+              display: "grid",
+              placeItems: "center",
+            }}
+          >
+            <TextField
+              className="simple-input pb16"
+              type="text"
+              onKeyUp={(e) => {
+                onCheckEnter(e);
+              }}
+              placeholder="이름"
+              onChange={onChange}
+              size="small"
+
+              // maxLength={15}
+            />
+            <LocalizationProvider
+              dateAdapter={AdapterDayjs}
+              adapterLocale="ko"
+
+              // adapterLocale={koLocale}
+            >
+              <DemoContainer components={["DatePicker"]}>
+                <DatePicker
+                  label="생년월일"
+                  value={selectedDate === null ? null : dayjs(selectedDate)}
+                  onChange={(newValue: any) => {
+                    setSelectedDate(dayjs(newValue).format("YYYY-MM-DD"));
+                  }}
+                  openTo="year"
+                  views={["year", "month", "day"]}
+                  slotProps={{
+                    textField: {
+                      // onChange: () => {},
+                      placeholder: "생년월일",
+                      label: "",
+                      style: { width: "240px" },
+                      size: "small",
+                    },
+                  }}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
+            <div style={{ paddingTop: "40px" }}>
+              <button
+                className="cute-button"
+                disabled={
+                  name.length < 1 ||
+                  (!_.isNull(selectedDate) && dateRegex.test(selectedDate))
+                }
+                onClick={() => {
+                  handleButtonClick();
+                }}
+              >
+                ✨ 알아보자 ✨
+              </button>
+            </div>
+            <div
+              className="jw-button"
+              onClick={() => {
+                handleClickJw();
               }}
             >
-              <TextField
-                className="simple-input pb16"
-                type="text"
-                onKeyUp={(e) => {
-                  onCheckEnter(e);
-                }}
-                placeholder="이름"
-                onChange={onChange}
-                size="small"
-
-                // maxLength={15}
-              />
-              <LocalizationProvider
-                dateAdapter={AdapterDayjs}
-                adapterLocale="ko"
-
-                // adapterLocale={koLocale}
-              >
-                <DemoContainer components={["DatePicker"]}>
-                  <DatePicker
-                    label="생년월일"
-                    value={selectedDate === null ? null : dayjs(selectedDate)}
-                    onChange={(newValue: any) => {
-                      setSelectedDate(dayjs(newValue).format("YYYY-MM-DD"));
-                    }}
-                    openTo="year"
-                    views={["year", "month", "day"]}
-                    slotProps={{
-                      textField: {
-                        // onChange: () => {},
-                        placeholder: "생년월일",
-                        label: "",
-                        style: { width: "240px" },
-                        size: "small",
-                      },
-                    }}
-                  />
-                </DemoContainer>
-              </LocalizationProvider>
-              <div style={{ paddingTop: "40px" }}>
-                <button
-                  className="cute-button"
-                  disabled={name.length < 1 || selectedDate === null}
-                  onClick={() => {
-                    handleButtonClick();
-                  }}
-                >
-                  ✨ 알아보자 ✨
-                </button>
-              </div>
-              <div
-                className="jw-button"
-                onClick={() => {
-                  handleClickJw();
-                }}
-              >
-                혹시? 김재웅이신가요?
-              </div>
+              혹시? 김재웅이신가요?
             </div>
-          )}
-          {!isClicked ? (
-            isJw && (
-              <div className="jw ">
-                {/* <div className="pb16 lh" style={{ fontWeight: 700, fontSize: 18 }}>
-              🥰 2025년 째웅이 운세 해석
-            </div> */}
-                <div className=" emoji" style={{ marginBottom: "32px" }}>
-                  💘💵🌳🌊🐶
-                </div>
-                <TypingEffect data={jwList} onComplete={handleTypingComplete} />
-                {isShowEmojis && (
-                  <>
-                    <div
-                      className="pb16 lh"
-                      style={{ fontWeight: 700, fontSize: 18, marginTop: 32 }}
-                    >
-                      2025년 째웅이의 키워드
-                    </div>
-
-                    <div className="pb16 lh">
-                      💖 깊어진 사랑 | 💰 풍요로운 결실 | 🌱 꾸준한 성장 | 🌊
-                      평화로운 흐름 | 🐾 믿음의 연결
-                    </div>
-                    <div className="pb16 lh" style={{ marginTop: 32 }}>
-                      너는 2025년에 진짜 잘될 수밖에 없어.
-                      <div>
-                        지금처럼만 해도 네가 상상하지 못한 행복들이 너한테
-                        찾아올 거야 💕
-                      </div>
-                      네가 누릴 모든 순간이 기대돼! 😊
-                    </div>
-                  </>
-                )}
-              </div>
-            )
-          ) : (
-            <></>
-          )}
+          </div>
         </div>
         <div className="songtak" style={{ paddingTop: "24px" }}>
           <span
@@ -336,33 +207,27 @@ const MainPage = () => {
             made by songtak
           </span>
         </div>
-        {!isJw && (
-          <>
-            {isMobile() ? (
-              <div ref={scriptElement}>
-                <ins
-                  className="kakao_ad_area"
-                  style={{ display: "none" }}
-                  data-ad-unit="DAN-jBHD2oE0XAGRAFIb"
-                  data-ad-width="320"
-                  data-ad-height="50"
-                />
-              </div>
-            ) : (
-              <div
-                ref={scriptElement}
-                style={{ width: "-webkit-fill-available" }}
-              >
-                <ins
-                  className="kakao_ad_area"
-                  style={{ display: "none" }}
-                  data-ad-unit="DAN-rHPZwIFTmiWfIt6i"
-                  data-ad-width="728"
-                  data-ad-height="90"
-                />
-              </div>
-            )}
-          </>
+
+        {isMobile() ? (
+          <div ref={scriptElement}>
+            <ins
+              className="kakao_ad_area"
+              style={{ display: "none" }}
+              data-ad-unit="DAN-jBHD2oE0XAGRAFIb"
+              data-ad-width="320"
+              data-ad-height="50"
+            />
+          </div>
+        ) : (
+          <div ref={scriptElement} style={{ width: "-webkit-fill-available" }}>
+            <ins
+              className="kakao_ad_area"
+              style={{ display: "none" }}
+              data-ad-unit="DAN-rHPZwIFTmiWfIt6i"
+              data-ad-width="728"
+              data-ad-height="90"
+            />
+          </div>
         )}
       </div>
     </>
