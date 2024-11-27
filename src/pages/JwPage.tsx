@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 
 import { jwList } from "../assets/jw";
 
-import TypingEffect from "../components/TypingEffect";
+import TypingEffect from "../components/JwTypingEffect";
 
 const JwPage = () => {
   const location = useLocation();
