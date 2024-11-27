@@ -116,6 +116,10 @@ const MainPage = () => {
             >
               🫧 2025 🐍
             </div>
+            <div>
+              <div className="title_sub">나에게</div>
+              <div className="title_sub">일어날 좋은 일들!</div>
+            </div>
           </div>
 
           <div
@@ -169,7 +173,9 @@ const MainPage = () => {
                 className="cute-button"
                 disabled={
                   name.length < 1 ||
-                  (!_.isNull(selectedDate) && dateRegex.test(selectedDate))
+                  (_.isNull(selectedDate)
+                    ? true
+                    : !dateRegex.test(selectedDate))
                 }
                 onClick={() => {
                   handleButtonClick();
