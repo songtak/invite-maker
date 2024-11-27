@@ -285,7 +285,7 @@ const ResultPage = () => {
       .then((dataUrl: string) => {
         const isIOS = /iP(ad|hone|od)/i.test(navigator.userAgent);
 
-        if (isIOS) {
+        if (!isIOS) {
           // iOS에서는 Base64 데이터를 직접 새로운 페이지에서 표시
           const newTab = window.open();
           if (newTab) {
@@ -301,7 +301,27 @@ const ResultPage = () => {
 
             newTab.document.body.appendChild(img);
           } else {
-            alert("새 창을 열 수 없습니다. 팝업 차단을 해제해주세요.");
+            // alert("새 창을 열 수 없습니다. 팝업 차단을 해제해주세요.");
+            // 일반 브라우저 다운로드 처리
+            const [header, base64Data] = dataUrl.split(",");
+            /** @ts-ignore */
+            const mimeType = header?.match(/:(.*?);/)[1];
+            const binary = atob(base64Data);
+            const array = [];
+            for (let i = 0; i < binary.length; i++) {
+              array.push(binary.charCodeAt(i));
+            }
+            const blob = new Blob([new Uint8Array(array)], { type: mimeType });
+            const blobUrl = URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = blobUrl;
+            link.download = `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            URL.revokeObjectURL(blobUrl); // 메모리 정리
           }
         } else {
           // 일반 브라우저 다운로드 처리
