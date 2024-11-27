@@ -28,9 +28,10 @@
   .title-wrapper {
     /* padding-bottom: 80px; */
     margin-top: 60px;
+    margin-bottom: 16px;
   }
   .title {
-    font-size: 40px;
+    font-size: 36px;
     padding-bottom: 20px;
     font-weight: 700;
     /* width: 730px; */
@@ -38,21 +39,26 @@
     padding-top: 32px;
   }
   .title_sub {
-    font-size: 32px;
+    font-size: 28px;
     /* padding-bottom: 50px; */
     /* width: 730px; */
     text-align: center;
+    letter-spacing: 1.4px;
   }
   .chat {
     overflow-y: auto;
   }
-  .lh {
-    line-height: 2;
+  .intro_wrapper {
+    margin-top: 40px;
   }
+  .intro {
+    padding: 44px 28px;
+  }
+
   .emoji {
     font-size: 40px;
     letter-spacing: 16px;
-    padding: 24px;
+    padding: 36px;
   }
   .cute-button {
     background: linear-gradient(135deg, #000000, #000000);
@@ -105,9 +111,7 @@
     border-color: #000000;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
   }
-  .pb16 {
-    padding-bottom: 16px;
-  }
+
   .songtak {
     /* position: absolute;
     top: 96vh;

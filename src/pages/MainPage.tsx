@@ -172,6 +172,12 @@ const MainPage = () => {
     ReactGA.send("pageview");
   }, [location]);
 
+  const isMobile = () => {
+    return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(
+      navigator.userAgent
+    );
+  };
+
   return (
     <>
       <div className="main_content">
@@ -180,7 +186,7 @@ const MainPage = () => {
             {!isJw ? (
               <div
                 className="title"
-                style={{ paddingBottom: "14px", paddingTop: "80px" }}
+                style={{ paddingBottom: "14px", paddingTop: "20px" }}
               >
                 🫧 2025 🐍
               </div>
@@ -248,12 +254,9 @@ const MainPage = () => {
                     }}
                     openTo="year"
                     views={["year", "month", "day"]}
-                    // disabled={props.disabled}
-                    // renderInput={(params: any) => (
-                    //   <TextField {...params} size="small" />
-                    // )}
                     slotProps={{
                       textField: {
+                        // onChange: () => {},
                         placeholder: "생년월일",
                         label: "",
                         style: { width: "240px" },
@@ -335,24 +338,30 @@ const MainPage = () => {
         </div>
         {!isJw && (
           <>
-            <div ref={scriptElement}>
-              <ins
-                className="kakao_ad_area"
-                style={{ display: "none" }}
-                data-ad-unit="DAN-jBHD2oE0XAGRAFIb"
-                data-ad-width="320"
-                data-ad-height="50"
-              />
-            </div>
-            {/* <div ref={scriptElement} style={{ width: "-webkit-fill-available" }}>
-            <ins
-              className="kakao_ad_area"
-              style={{ display: "none" }}
-              data-ad-unit="DAN-rHPZwIFTmiWfIt6i"
-              data-ad-width="728"
-              data-ad-height="90"
-            />
-          </div> */}
+            {isMobile() ? (
+              <div ref={scriptElement}>
+                <ins
+                  className="kakao_ad_area"
+                  style={{ display: "none" }}
+                  data-ad-unit="DAN-jBHD2oE0XAGRAFIb"
+                  data-ad-width="320"
+                  data-ad-height="50"
+                />
+              </div>
+            ) : (
+              <div
+                ref={scriptElement}
+                style={{ width: "-webkit-fill-available" }}
+              >
+                <ins
+                  className="kakao_ad_area"
+                  style={{ display: "none" }}
+                  data-ad-unit="DAN-rHPZwIFTmiWfIt6i"
+                  data-ad-width="728"
+                  data-ad-height="90"
+                />
+              </div>
+            )}
           </>
         )}
       </div>

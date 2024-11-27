@@ -4,10 +4,30 @@ body,
 html {
   padding: 0px;
   margin: 0px;
+  overflow: auto;
 }
 
 .common {
   font-family: "Noto Sans KR";
+  background-color: white;
+}
+
+.pb16 {
+  padding-bottom: 16px;
+}
+.pb18 {
+  padding-bottom: 18px;
+}
+.pb24 {
+  padding-bottom: 24px;
+}
+.pb36 {
+  padding-bottom: 36px;
+}
+
+.lh {
+  line-height: 1.8;
+  letter-spacing: 0.2px;
 }
 
 .save_image_wrapper {

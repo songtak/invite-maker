@@ -52,32 +52,30 @@ type Result = {
   emojis: string;
   check_date: string;
   emojiIds: string;
+  introduction: string;
 };
 
 const ResultPage = () => {
   const location = useLocation();
+
+  // console.log("emojiList", emojiList1.length);
 
   const now = dayjs();
   const [name, setName] = useState<string | null>(null);
   const [date, setDate] = useState<string | null>(null);
   const [emojis, setEmojis] = useState<string[] | string>([""]);
   const [chatData, setChatData] = useState<string>("");
+  const [saveChatData, setSaveChatData] = useState<string>("");
+  const [isDone, setIsDone] = useState<boolean>(false);
   const [emojiIds, setEmojiIds] = useState<number[] | null>(null);
   const [randomData, setRandomData] = useState<Emoji[] | null>(null);
-  const [isDone, setIsDone] = useState<boolean>(false);
-  const [isIntroDone, setIsIntroDone] = useState<boolean>(false);
   const [isShowEmojis, setIsShowEmojis] = useState<boolean>(false);
-  const [showEmojiFiveIntro1, setShowEmojiFiveIntro1] = useState<string>("");
-  const [showEmojiFiveIntro2, setShowEmojiFiveIntro2] = useState<string>("");
-
-  const [saveChatData, setSaveChatData] = useState<string>("");
+  const [itro, setIntro] = useState<string>("");
 
   const searchParams = new URLSearchParams(location.search.slice(1));
   const nameParam = searchParams.get("name");
   const dateParam = searchParams.get("date");
-
-  const emojiFiveIntro1 = `이제 ${nameParam}의 2025년을 나타내는` as string;
-  const emojiFiveIntro2 = ` 특별한 이모지 다섯 개를 소개할게!` as string;
+  // console.log("emojiList", emojiList.length);
 
   const getRandomEmojis = (count: number): Emoji[] => {
     // 유효한 ID만 추출
@@ -125,23 +123,43 @@ const ResultPage = () => {
 
     setEmojis(emoji);
     setEmojiIds(emojiIds);
-    setSaveChatData(
-      introduction[randomIntroduction - 1].description.replace(
-        /{nameParam}/g,
-        nameParam as string
-      )
-    );
+    setIntro(introduction[randomIntroduction - 1].description);
     addResultWithCustomDocName({
       name: nameParam as string,
       date: dateParam as string,
-      resultContent: introduction[randomIntroduction - 1].description.replace(
-        /{nameParam}/g,
-        nameParam as string
-      ),
+      resultContent: chat as string,
       emojis: emoji.join(""),
       check_date: now.format("YYYY-MM-DD hh:mm"),
       emojiIds: emojiIds.toString(),
+      introduction: introduction[randomIntroduction - 1].description,
     });
+    setIsDone(true);
+
+    // const response = await getResponseFromGPT(
+    //   `친구 ${nameParam}의 2025년 ${emoji} 이모지들에 대한 전반적인 느낌
+    //     긍정적인 내용으로 아주 짧게! 머릿말로 적어줘 친구에게 말하듯 다정한 말투로! 이모지 사용하지 말아줘
+    //    `,
+    //   (chunk: any) => {
+    //     setChatData((prev) => {
+    //       const updatedChat = prev.toString() + chunk.toString(); // 기존 데이터에 chunk 추가
+    //       chat = updatedChat; // chat 변수 업데이트
+
+    //       return updatedChat; // setChatData에 반영
+    //     });
+    //   }
+    // );
+
+    // if (response) {
+    //   addResultWithCustomDocName({
+    //     name: nameParam as string,
+    //     date: dateParam as string,
+    //     resultContent: chat as string,
+    //     emojis: emoji.join(""),
+    //     check_date: now.format("YYYY-MM-DD hh:mm"),
+    //     emojiIds: emojiIds.toString(),
+    //   });
+    //   setIsDone(true);
+    // }
   };
 
   /** 파이어베이스에 저장된 값 가져오기 */
@@ -380,42 +398,6 @@ const ResultPage = () => {
       };
     }
   }, [saveChatData, count]);
-  /** =============================================================================== */
-  const [introCount1, setIntroCount1] = useState(0);
-  const [introCount2, setIntroCount2] = useState(0);
-  const [intro1Done, setIntro1Done] = useState(false);
-
-  useEffect(() => {
-    if (isDone && !intro1Done) {
-      const typingInterval1 = setInterval(() => {
-        setShowEmojiFiveIntro1((prev) => prev + emojiFiveIntro1[introCount1]);
-        if (introCount1 + 1 === emojiFiveIntro1.length) {
-          setIntro1Done(true);
-          clearInterval(typingInterval1);
-        } else {
-          setIntroCount1((prev) => prev + 1);
-        }
-      }, 60);
-
-      return () => clearInterval(typingInterval1);
-    }
-  }, [isDone, introCount1, intro1Done]);
-
-  useEffect(() => {
-    if (isDone && intro1Done) {
-      const typingInterval2 = setInterval(() => {
-        setShowEmojiFiveIntro2((prev) => prev + emojiFiveIntro2[introCount2]);
-        if (introCount2 + 1 === emojiFiveIntro2.length) {
-          clearInterval(typingInterval2);
-          setIsIntroDone(true);
-        } else {
-          setIntroCount2((prev) => prev + 1);
-        }
-      }, 60);
-
-      return () => clearInterval(typingInterval2);
-    }
-  }, [isDone, intro1Done, introCount2]);
 
   /** =============================================================================== */
 
@@ -465,6 +447,42 @@ const ResultPage = () => {
     scriptElement.current?.appendChild(script);
   }, []);
 
+  // const scriptElement = useRef(null);
+
+  // useEffect(() => {
+  //   const script = document.createElement("script");
+  //   script.setAttribute("src", "https://t1.daumcdn.net/kas/static/ba.min.js");
+  //   script.setAttribute("charset", "utf-8");
+  //   // scriptElement.current?.appendChild(script);
+  //   if (scriptElement.current) {
+  //     scriptElement.current?.appendChild(script);
+  //   }
+
+  //   return () => {
+  //     const globalAdfit = window.adfit;
+  //     if (globalAdfit) globalAdfit.destroy("DAN-jBHD2oE0XAGRAFIb");
+  //   };
+  // }, []);
+
+  // const scriptElement = useRef<HTMLDivElement | null>(null);
+
+  // useEffect(() => {
+  //   const script = document.createElement("script");
+  //   script.setAttribute("src", "https://t1.daumcdn.net/kas/static/ba.min.js");
+  //   script.setAttribute("charset", "utf-8");
+
+  //   // scriptElement.current 타입 체크 후 appendChild 호출
+  //   if (scriptElement.current) {
+  //     scriptElement.current.appendChild(script);
+  //   }
+
+  //   return () => {
+  //     // adfit 객체가 존재할 경우 destroy 호출
+  //     const globalAdfit = (window as any).adfit;
+  //     if (globalAdfit) globalAdfit.destroy("DAN-jBHD2oE0XAGRAFIb");
+  //   };
+  // }, []);
+
   /** =============================================================================== */
 
   useEffect(() => {
@@ -473,70 +491,68 @@ const ResultPage = () => {
   }, [location]);
   /** =============================================================================== */
 
+  // console.log("dd", typeof emojis);
+
   return (
     <div className="main_content">
       <div className="page_wrapper">
         <div className="title-wrapper">
-          <div className="title">🫧 2025 🐍</div>
-          <div>
+          <div className="title" style={{ paddingBottom: "14px" }}>
+            2025
+          </div>
+          <div style={{ marginBottom: 24 }}>
             <div className="title_sub">{name}에게</div>
             <div className="title_sub">일어날 좋은 일들!</div>
-            {/* <div className="title_sub" style={{ paddingTop: 16 }}>
-              🫧🐍
-            </div> */}
           </div>
-        </div>
 
-        {!_.isNull(randomData) && (
-          <div className="chat ">
-            <div className="intro_wrapper">
-              <div className="lh">{chatData}</div>
-              <div className="intro">
-                <div style={{ paddingBottom: "4px", letterSpacing: "0.4px" }}>
-                  {showEmojiFiveIntro1}
-                </div>
-                <div style={{ letterSpacing: "0.4px" }}>
-                  {showEmojiFiveIntro2}
-                </div>
+          {!_.isNull(randomData) && (
+            <>
+              <div className="emoji" style={{ marginBottom: 24 }}>
+                {emojis}
               </div>
-            </div>
-            {isIntroDone && (
-              <div
-                className="description_wrapper"
-                style={{ marginBottom: "40px" }}
-              >
-                <div className="emoji">[{emojis}]</div>
-                <TypingEffect
-                  data={randomData}
-                  onComplete={handleTypingComplete}
-                />
-                {isShowEmojis && (
-                  <div className="description_emoji_wrapper">
-                    <div
-                      className="pb16 lh"
-                      style={{
-                        fontWeight: 700,
-                        fontSize: 18,
-                        marginTop: 32,
-                      }}
-                    >
-                      2025년 {nameParam}의 키워드
-                    </div>
-                    {randomData.map((item: Emoji, i: number) => (
-                      <span className="description_emoji pb16 lh" key={item.id}>
-                        {`  ${item.emoji}  ${item.symbol} `}
+              <div className="chat ">
+                <p className="lh">{chatData}</p>
+                {isDone && (
+                  <div
+                    className="description_wrapper"
+                    style={{ marginBottom: "40px" }}
+                  >
+                    <TypingEffect
+                      data={randomData}
+                      onComplete={handleTypingComplete}
+                    />
+                    {isShowEmojis && (
+                      <div className="description_emoji_wrapper">
+                        <div
+                          className="pb16 lh"
+                          style={{
+                            fontWeight: 700,
+                            fontSize: 18,
+                            marginTop: 32,
+                          }}
+                        >
+                          2025년 {nameParam}의 키워드
+                        </div>
+                        {randomData.map((item: Emoji, i: number) => (
+                          <span
+                            className="description_emoji pb16 lh"
+                            key={item.id}
+                          >
+                            {`  ${item.emoji}  ${item.symbol} `}
 
-                        <span style={{ fontWeight: 500 }}>
-                          {i < 4 && `   | `}
-                        </span>
-                      </span>
-                    ))}
+                            <span style={{ fontWeight: 500 }}>
+                              {i < 4 && `   | `}
+                            </span>
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
-            )}
-          </div>
-        )}
+            </>
+          )}
+        </div>
       </div>
       {isDone && isShowEmojis && (
         <div className="tooltip_wrapper">
@@ -564,27 +580,24 @@ const ResultPage = () => {
           made by songtak
         </span>
       </div>
-      {isMobile() ? (
-        <div ref={scriptElement} style={{ width: "-webkit-fill-available" }}>
-          <ins
-            className="kakao_ad_area"
-            style={{ display: "none" }}
-            data-ad-unit="DAN-jBHD2oE0XAGRAFIb"
-            data-ad-width="320"
-            data-ad-height="50"
-          />
-        </div>
-      ) : (
-        <div ref={scriptElement} style={{ width: "-webkit-fill-available" }}>
-          <ins
-            className="kakao_ad_area"
-            style={{ display: "none" }}
-            data-ad-unit="DAN-rHPZwIFTmiWfIt6i"
-            data-ad-width="728"
-            data-ad-height="90"
-          />
-        </div>
-      )}
+      <div ref={scriptElement} style={{ width: "-webkit-fill-available" }}>
+        <ins
+          className="kakao_ad_area"
+          style={{ display: "none" }}
+          data-ad-unit="DAN-jBHD2oE0XAGRAFIb"
+          data-ad-width="320"
+          data-ad-height="50"
+        />
+      </div>
+      {/* <div ref={scriptElement} style={{ width: "-webkit-fill-available" }}>
+        <ins
+          className="kakao_ad_area"
+          style={{ display: "none" }}
+          data-ad-unit="DAN-rHPZwIFTmiWfIt6i"
+          data-ad-width="728"
+          data-ad-height="90"
+        />
+      </div> */}
       {/* 다운로드용 이미지가 화면에 안보이도록 설정 */}
       <div className="save_image_hide">{signatureImageHtml()}</div>
       {/* <div className="">{signatureImageHtml()}</div> */}

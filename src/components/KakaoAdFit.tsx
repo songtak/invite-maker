@@ -7,7 +7,7 @@ function KakaoAdFit({ unit, width, height, disabled }: any) {
     if (!disabled) {
       const script = document.createElement("script");
       script.setAttribute("src", "https://t1.daumcdn.net/kas/static/ba.min.js");
-      scriptElementWrapper.current.appendChild(script);
+      //   scriptElementWrapper.current.appendChild(script);
 
       return () => {
         const globalAdfit = window?.adfit;

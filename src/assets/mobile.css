@@ -45,37 +45,37 @@
   }
   .title-wrapper {
     margin-top: 40px;
+    margin-bottom: 16px;
   }
   .title {
-    /* padding-top: 16px; */
-    font-size: 40px;
-
+    padding-bottom: 8px;
+    font-size: 34px;
     font-weight: 600;
-    /* padding-bottom: 3px; */
-    /* width: 730px; */
-    text-align: center;
   }
   .title_sub {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 500;
-    /* padding-bottom: 30px; */
-    /* width: 730px; */
-    text-align: center;
+    letter-spacing: 1.4px;
   }
   .chat {
     padding-left: 8vw;
     padding-right: 8vw;
+    padding-top: 32px;
     /* height: 54vh; */
     /* overflow-y: auto; */
     /* height: calc(100vh - 55vh); */
   }
-  .lh {
-    line-height: 1.6;
+  .intro_wrapper {
   }
+  .intro {
+    padding: 48px 0px;
+  }
+
   .emoji {
-    margin-bottom: 32px;
+    padding-bottom: 40px;
     font-size: 36px;
     letter-spacing: 12px;
+    /* padding-top: 24px; */
     /* padding: 16px; */
   }
 
@@ -144,10 +144,6 @@
   .child_p {
     /* margin-top: 80vh; */
     /* height: fit-content; */
-  }
-
-  .pb16 {
-    padding-bottom: 16px;
   }
 
   .songtak {

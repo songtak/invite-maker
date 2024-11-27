@@ -47,10 +47,16 @@ const TypingEffect: React.FC<TypingEffectProps> = ({ data, onComplete }) => {
     }
   }, [charIndex, currentIndex, data, onComplete]);
 
+  const isMobile = () => {
+    return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(
+      navigator.userAgent
+    );
+  };
+
   return (
     <div>
       {typedText.map((text, index) => (
-        <div key={index} className="pb16 lh">
+        <div key={index} className={`lh ${isMobile() ? "pb24" : "pb36"}`}>
           {text}
         </div>
       ))}
