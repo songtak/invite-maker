@@ -30,7 +30,7 @@ const authRoutes: RouteObject[] = [
     errorElement: <ErrorPage />,
   },
   {
-    path: "/jw",
+    path: "/for-jw",
     element: <JwPage />,
     errorElement: <ErrorPage />,
   },

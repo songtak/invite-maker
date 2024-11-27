@@ -12,19 +12,18 @@ import "dayjs/locale/ko";
 import dayjs from "dayjs";
 import _ from "lodash";
 
-import { jwList } from "../assets/jw";
-import TypingEffect from "../components/TypingEffect";
-
 const MainPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [name, setName] = useState<string>("");
 
-  ReactGA.send({
-    hitType: "pageview",
-    page: location.pathname, // useRouter를 사용하여, pathname값을 가져옵니다.
-  });
+  const isMobile = () => {
+    return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(
+      navigator.userAgent
+    );
+  };
+  const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
 
   // http://localhost:5173/
   const handleButtonClick = async () => {
@@ -47,8 +46,7 @@ const MainPage = () => {
   };
 
   const handleClickJw = () => {
-    // setIsJw(true);
-    navigate("/jw");
+    navigate("/for-jw");
     ReactGA.event("째웅_버튼_클릭", {
       category: "is_jw_button_click",
       action: "째웅 버튼 클릭",
@@ -102,17 +100,10 @@ const MainPage = () => {
     scriptElement.current?.appendChild(script);
   }, []);
 
-  useEffect(() => {
-    ReactGA.set({ page: location.pathname });
-    ReactGA.send("pageview");
-  }, [location]);
-
-  const isMobile = () => {
-    return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(
-      navigator.userAgent
-    );
-  };
-  const dateRegex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
+  ReactGA.send({
+    hitType: "pageview",
+    page: location.pathname, // useRouter를 사용하여, pathname값을 가져옵니다.
+  });
 
   return (
     <>
