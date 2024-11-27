@@ -550,9 +550,9 @@ const ResultPage = () => {
             <SaveAltIcon onClick={handleClickSave} />
             <span className="tooltip-text">저장하기</span>
           </span>
-          <div>
+          <div style={{ marginTop: "32px" }}>
             <button
-              className="jw-button"
+              className="cute-button"
               onClick={() => {
                 navigate("/");
               }}
