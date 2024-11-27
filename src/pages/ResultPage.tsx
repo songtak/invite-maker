@@ -60,7 +60,6 @@ const ResultPage = () => {
 
   const now = dayjs();
   const [name, setName] = useState<string | null>(null);
-  const [date, setDate] = useState<string | null>(null);
   const [emojis, setEmojis] = useState<string[] | string>([""]);
   const [chatData, setChatData] = useState<string>("");
   const [emojiIds, setEmojiIds] = useState<number[] | null>(null);
@@ -70,6 +69,8 @@ const ResultPage = () => {
   const [isShowEmojis, setIsShowEmojis] = useState<boolean>(false);
   const [showEmojiFiveIntro1, setShowEmojiFiveIntro1] = useState<string>("");
   const [showEmojiFiveIntro2, setShowEmojiFiveIntro2] = useState<string>("");
+
+  const [resultImage, setResultImage] = useState<any>();
 
   const [saveChatData, setSaveChatData] = useState<string>("");
 
@@ -118,7 +119,6 @@ const ResultPage = () => {
   };
 
   const getEmojiResult = async () => {
-    let chat: any;
     const randomEmojis = getRandomEmojis(5);
     const randomIntroduction = Math.floor(Math.random() * 20) + 1;
     const emoji = randomEmojis.map((item) => item.emoji);
@@ -218,20 +218,48 @@ const ResultPage = () => {
   };
   // 모바일 공유 함수
   const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`,
-          text: "🫧🫧🐍🐍",
-          url: window.location.href,
-        });
-      } catch (error) {
-        console.error("공유 실패:", error);
-      }
-    } else {
-      alert("공유하기 기능을 지원하지 않는 브라우저입니다. 링크를 복사합니다.");
-      copyToClipboard();
+    ///url -> file 변경하는 코드
+    let arr: string[] = resultImage.split(","),
+      //  @ts-ignore
+      mime = arr[0].match(/:(.*?);/)[1],
+      bstr = window.atob(arr[1]),
+      n = bstr.length,
+      u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
     }
+
+    const file = new File(
+      [u8arr],
+      `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`,
+      { type: mime }
+    );
+
+    if (navigator.share) {
+      navigator.share({
+        title: "🫧2025🐍",
+        text: `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`,
+        files: [file],
+      });
+    } else {
+      alert("공유하기가 지원되지 않는 환경 입니다.");
+    }
+
+    // if (navigator.share) {
+    //   try {
+    //     await navigator.share({
+    //       title: `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`,
+    //       text: "🫧🫧🐍🐍",
+    //       url: window.location.href,
+    //     });
+    //   } catch (error) {
+    //     console.error("공유 실패:", error);
+    //   }
+    // } else {
+    //   alert("공유하기 기능을 지원하지 않는 브라우저입니다. 링크를 복사합니다.");
+    //   copyToClipboard();
+    // }
   };
 
   const handleClickShare = async () => {
@@ -252,7 +280,27 @@ const ResultPage = () => {
       action: "저장하기 버튼 클릭",
       label: `${dateParam}_${nameParam}`,
     });
-    createSignatureImage();
+
+    // 일반 브라우저 다운로드 처리
+    const [header, base64Data] = resultImage.split(",");
+    /** @ts-ignore */
+    const mimeType = header?.match(/:(.*?);/)[1];
+    const binary = atob(base64Data);
+    const array = [];
+    for (let i = 0; i < binary.length; i++) {
+      array.push(binary.charCodeAt(i));
+    }
+    const blob = new Blob([new Uint8Array(array)], { type: mimeType });
+    const blobUrl = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = blobUrl;
+    link.download = `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(blobUrl); // 메모리 정리
   };
 
   const handleClickSongtak = () => {
@@ -275,7 +323,7 @@ const ResultPage = () => {
    * @function
    * @description 다운로드 이미지 생성
    */
-  const createSignatureImage = useCallback(async () => {
+  const createResultImage = useCallback(async () => {
     if (signatureImageRef.current === null) {
       return;
     }
@@ -284,70 +332,10 @@ const ResultPage = () => {
       .toJpeg(signatureImageRef.current, { cacheBust: true, quality: 1 })
       .then((dataUrl: string) => {
         const isIOS = /iP(ad|hone|od)/i.test(navigator.userAgent);
-
-        if (!isIOS) {
-          // iOS에서는 Base64 데이터를 직접 새로운 페이지에서 표시
-          const newTab = window.open();
-          if (newTab) {
-            newTab.document.body.style.margin = "0";
-            newTab.document.body.style.display = "flex";
-            newTab.document.body.style.justifyContent = "center";
-            newTab.document.body.style.alignItems = "center";
-
-            const img = newTab.document.createElement("img");
-            img.src = dataUrl;
-            img.style.maxWidth = "100%";
-            img.style.height = "auto";
-
-            newTab.document.body.appendChild(img);
-          } else {
-            // alert("새 창을 열 수 없습니다. 팝업 차단을 해제해주세요.");
-            // 일반 브라우저 다운로드 처리
-            const [header, base64Data] = dataUrl.split(",");
-            /** @ts-ignore */
-            const mimeType = header?.match(/:(.*?);/)[1];
-            const binary = atob(base64Data);
-            const array = [];
-            for (let i = 0; i < binary.length; i++) {
-              array.push(binary.charCodeAt(i));
-            }
-            const blob = new Blob([new Uint8Array(array)], { type: mimeType });
-            const blobUrl = URL.createObjectURL(blob);
-
-            const link = document.createElement("a");
-            link.href = blobUrl;
-            link.download = `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            URL.revokeObjectURL(blobUrl); // 메모리 정리
-          }
-        } else {
-          // 일반 브라우저 다운로드 처리
-          const [header, base64Data] = dataUrl.split(",");
-          /** @ts-ignore */
-          const mimeType = header?.match(/:(.*?);/)[1];
-          const binary = atob(base64Data);
-          const array = [];
-          for (let i = 0; i < binary.length; i++) {
-            array.push(binary.charCodeAt(i));
-          }
-          const blob = new Blob([new Uint8Array(array)], { type: mimeType });
-          const blobUrl = URL.createObjectURL(blob);
-
-          const link = document.createElement("a");
-          link.href = blobUrl;
-          link.download = `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-
-          URL.revokeObjectURL(blobUrl); // 메모리 정리
-        }
+        setResultImage(dataUrl);
       })
       .catch((e: any) => {
-        console.log("createSignatureImage / ERROR", e);
+        console.log("createResultImage / ERROR", e);
         alert("브라우저에서 지원하지 않습니다.");
       });
   }, [signatureImageRef]);
@@ -477,7 +465,6 @@ const ResultPage = () => {
 
   useEffect(() => {
     _.isString(nameParam) && setName(nameParam);
-    _.isString(dateParam) && setDate(dateParam);
   }, []);
 
   useEffect(() => {
@@ -489,6 +476,10 @@ const ResultPage = () => {
       });
     }
   }, []);
+
+  useEffect(() => {
+    !_.isEmpty(chatData) && !_.isEmpty(name) && createResultImage();
+  }, [chatData, name]);
 
   useEffect(() => {
     return () => {
