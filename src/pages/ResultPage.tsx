@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   collection,
   doc,
@@ -56,6 +56,7 @@ type Result = {
 
 const ResultPage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const now = dayjs();
   const [name, setName] = useState<string | null>(null);
@@ -549,6 +550,16 @@ const ResultPage = () => {
             <SaveAltIcon onClick={handleClickSave} />
             <span className="tooltip-text">저장하기</span>
           </span>
+          <div>
+            <button
+              className="jw-button"
+              onClick={() => {
+                navigate("/");
+              }}
+            >
+              ✨ 메인으로 ✨
+            </button>
+          </div>
         </div>
       )}
 
