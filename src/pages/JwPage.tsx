@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import _ from "lodash";
 
@@ -12,6 +12,7 @@ import TypingEffect from "../components/JwTypingEffect";
 
 const JwPage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const now = dayjs();
   const [isShowEmojis, setIsShowEmojis] = useState<boolean>(false);
@@ -80,6 +81,16 @@ const JwPage = () => {
                     거야 💕
                   </div>
                   네가 누릴 모든 순간이 기대돼! 😊
+                </div>
+                <div style={{ marginTop: "48px" }}>
+                  <button
+                    className="cute-button"
+                    onClick={() => {
+                      navigate("/");
+                    }}
+                  >
+                    ✨ 메인으로 ✨
+                  </button>
                 </div>
               </div>
             )}
