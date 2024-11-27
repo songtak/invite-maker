@@ -395,7 +395,7 @@ const ResultPage = () => {
         } else {
           setIntroCount1((prev) => prev + 1);
         }
-      }, 50);
+      }, 30);
 
       return () => clearInterval(typingInterval1);
     }
@@ -411,7 +411,7 @@ const ResultPage = () => {
         } else {
           setIntroCount2((prev) => prev + 1);
         }
-      }, 50);
+      }, 30);
 
       return () => clearInterval(typingInterval2);
     }
@@ -505,7 +505,8 @@ const ResultPage = () => {
                 className="description_wrapper"
                 style={{ marginBottom: "40px" }}
               >
-                <div className="emoji">[{emojis}]</div>
+                <div className="emoji">{emojis}</div>
+                {/* <div className="emoji">[{emojis}]</div> */}
                 <TypingEffect
                   data={randomData}
                   onComplete={handleTypingComplete}

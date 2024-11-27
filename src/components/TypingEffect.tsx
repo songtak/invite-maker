@@ -31,7 +31,7 @@ const TypingEffect: React.FC<TypingEffectProps> = ({ data, onComplete }) => {
             return updatedText;
           });
           setCharIndex((prev) => prev + 1);
-        }, 50); // 타이핑 속도 (밀리초)
+        }, 30); // 타이핑 속도 (밀리초)
         return () => clearTimeout(timer);
       } else {
         // 다음 항목으로 넘어가기 전에 상태 초기화
