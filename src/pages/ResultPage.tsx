@@ -275,13 +275,17 @@ const ResultPage = () => {
       copyToClipboard(); // 웹: URL 복사
     }
   };
+
+  const shareString = `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`;
+  // const isIOS = /iP(ad|hone|od)/i.test(navigator.userAgent);
+  const isAndroid = /Android/i.test(navigator.userAgent);
+
   const handleClickSave = () => {
     ReactGA.event("저장하기_버튼_클릭", {
       category: "save_button_click",
       action: "저장하기 버튼 클릭",
       label: `${dateParam}_${nameParam}`,
     });
-
     // 일반 브라우저 다운로드 처리
     const [header, base64Data] = resultImage.split(",");
     /** @ts-ignore */
@@ -294,14 +298,20 @@ const ResultPage = () => {
     const blob = new Blob([new Uint8Array(array)], { type: mimeType });
     const blobUrl = URL.createObjectURL(blob);
 
-    const link = document.createElement("a");
-    link.href = blobUrl;
-    link.download = `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    if (isAndroid) {
+      // Android 환경에서는 이미지 새 창 열기
+      const newTab = window.open();
+      newTab?.document.write(`<img src="${blobUrl}" />`);
+    } else {
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = shareString;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
 
-    URL.revokeObjectURL(blobUrl); // 메모리 정리
+      URL.revokeObjectURL(blobUrl); // 메모리 정리
+    }
   };
 
   const handleClickSongtak = () => {
@@ -332,7 +342,6 @@ const ResultPage = () => {
     await domtoimage
       .toJpeg(signatureImageRef.current, { cacheBust: true, quality: 1 })
       .then((dataUrl: string) => {
-        const isIOS = /iP(ad|hone|od)/i.test(navigator.userAgent);
         setResultImage(dataUrl);
       })
       .catch((e: any) => {
