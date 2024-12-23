@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import CoupangAd from "../components/common/CoupangAd";
 
 interface Emoji {
   id: number;
@@ -10,31 +11,64 @@ interface Emoji {
 
 interface TypingEffectProps {
   data: Emoji[];
-  onComplete?: () => void; // 모든 타이핑이 끝났음을 알리는 콜백
+  onComplete?: () => void;
 }
 
 const TypingEffect: React.FC<TypingEffectProps> = ({ data, onComplete }) => {
   const [typedText, setTypedText] = useState<string[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [isAdOpen, setIsAdOpen] = useState<boolean>(false);
+  const [isShowAllResult, setIsShowAllResult] = useState<boolean>(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleShowResult = () => {
+    setIsShowAllResult(true);
+    window.open(
+      "https://link.coupang.com/a/b6k87x",
+      "_blank",
+      "noopener, noreferrer"
+    );
+  };
 
   useEffect(() => {
     if (currentIndex < data.length) {
-      const description = data[currentIndex].description;
+      if (isAdOpen && !isShowAllResult) {
+        return;
+      }
 
-      // 현재 항목의 description을 전체적으로 출력
+      const description = data[currentIndex].description;
       setTypedText((prev) => [...prev, description]);
 
-      // 다음 항목으로 넘어가기 전 2초 대기
       const timer = setTimeout(() => {
-        setCurrentIndex((prev) => prev + 1);
-      }, 800); // 각 description 간 대기 시간 (밀리초)
+        if (currentIndex === 1) {
+          setIsAdOpen(true);
+        } else {
+          setCurrentIndex((prev) => prev + 1);
+        }
+      }, 800);
 
       return () => clearTimeout(timer);
-    } else if (onComplete) {
-      // 모든 타이핑이 끝났을 때 onComplete 호출
-      onComplete();
     }
-  }, [currentIndex, data, onComplete]);
+  }, [currentIndex, data, isAdOpen, isShowAllResult]);
+
+  useEffect(() => {
+    if (isShowAllResult && currentIndex === 1) {
+      const timer = setTimeout(() => {
+        setCurrentIndex((prev) => prev + 1);
+        setIsAdOpen(false);
+      }, 800);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isShowAllResult, currentIndex]);
+
+  useEffect(() => {
+    if (onComplete) {
+      activeIndex === 4 && onComplete();
+      activeIndex === 5 && onComplete();
+    }
+  }, [onComplete, activeIndex]);
 
   const isMobile = () => {
     return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(
@@ -42,102 +76,56 @@ const TypingEffect: React.FC<TypingEffectProps> = ({ data, onComplete }) => {
     );
   };
 
-  const [activeIndex, setActiveIndex] = useState(0);
-
   useEffect(() => {
     if (activeIndex < typedText.length) {
       const timer = setTimeout(() => {
         setActiveIndex(activeIndex + 1);
-      }, 400); // 각 텍스트의 애니메이션 간격
+      }, 400);
 
       return () => clearTimeout(timer);
     }
   }, [activeIndex, typedText.length]);
 
+  // https://link.coupang.com/a/b6k87x
+
   return (
-    <div className="">
+    <div ref={containerRef} className="">
       {typedText.map((text, index) => (
         <div
           key={index}
           className={`lh ${isMobile() ? "pb24" : "pb36"} fade-in-slide-down ${
             index < activeIndex ? "active" : ""
           }`}
-
-          // className={`lh ${isMobile() ? "pb24" : "pb36"}`}
         >
           {text}
         </div>
       ))}
+
+      {isAdOpen && !isShowAllResult && (
+        <div>
+          <div
+            style={{
+              marginBottom: "30px",
+              marginTop: "16px",
+              fontSize: "30px",
+              letterSpacing: "10px",
+            }}
+          >
+            [ {data[2].emoji} {data[3].emoji} {data[4].emoji} ]
+          </div>
+          <button
+            style={{ fontSize: "16px" }}
+            className="cute-button"
+            onClick={() => {
+              handleShowResult();
+            }}
+          >
+            광고 보고 이어서 확인하기 👀
+          </button>
+        </div>
+      )}
     </div>
   );
 };
 
 export default TypingEffect;
-
-// import React, { useState, useEffect } from "react";
-
-// interface Emoji {
-//   id: number;
-//   emoji: string;
-//   title: string;
-//   symbol: string;
-//   description: string;
-// }
-
-// interface TypingEffectProps {
-//   data: Emoji[];
-//   onComplete?: () => void; // 모든 타이핑이 끝났음을 알리는 콜백
-// }
-
-// const TypingEffect: React.FC<TypingEffectProps> = ({ data, onComplete }) => {
-//   const [typedText, setTypedText] = useState<string[]>([]);
-//   const [currentIndex, setCurrentIndex] = useState(0);
-//   const [charIndex, setCharIndex] = useState(0);
-
-//   useEffect(() => {
-//     if (currentIndex < data.length) {
-//       const description = data[currentIndex]?.description || "";
-//       if (charIndex < description.length) {
-//         // 타이핑 효과
-//         const timer = setTimeout(() => {
-//           setTypedText((prev) => {
-//             const updatedText = [...prev];
-//             updatedText[currentIndex] =
-//               (updatedText[currentIndex] || "") + description[charIndex];
-//             return updatedText;
-//           });
-//           setCharIndex((prev) => prev + 1);
-//         }, 50); // 타이핑 속도 (밀리초)
-//         return () => clearTimeout(timer);
-//       } else {
-//         // 다음 항목으로 넘어가기 전에 상태 초기화
-//         const nextTimer = setTimeout(() => {
-//           setCurrentIndex((prev) => prev + 1);
-//           setCharIndex(0);
-//         }, 200); // 항목 간 대기 시간 (밀리초)
-//         return () => clearTimeout(nextTimer);
-//       }
-//     } else if (onComplete) {
-//       // 모든 타이핑이 끝났을 때 onComplete 호출
-//       onComplete();
-//     }
-//   }, [charIndex, currentIndex, data, onComplete]);
-
-//   const isMobile = () => {
-//     return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(
-//       navigator.userAgent
-//     );
-//   };
-
-//   return (
-//     <div>
-//       {typedText.map((text, index) => (
-//         <div key={index} className={`lh ${isMobile() ? "pb24" : "pb36"}`}>
-//           {text}
-//         </div>
-//       ))}
-//     </div>
-//   );
-// };
-
-// export default TypingEffect;

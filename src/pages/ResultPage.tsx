@@ -75,6 +75,8 @@ const ResultPage = () => {
 
   const [saveChatData, setSaveChatData] = useState<string>("");
 
+  const [isShowAllResult, setIsShowAllResult] = useState<boolean>(false);
+
   const searchParams = new URLSearchParams(location.search.slice(1));
   const nameParam = searchParams.get("name");
   const dateParam = searchParams.get("date");
@@ -530,6 +532,57 @@ const ResultPage = () => {
     ReactGA.send("pageview");
   }, [location]);
   /** =============================================================================== */
+  const handleShowResult = () => {
+    setIsShowAllResult(true);
+    // "결과 보기" 버튼 클릭 시 맨 아래에서 30px 위 지점에 클릭 이벤트 트리거
+    const targetY =
+      document.documentElement.scrollHeight - window.innerHeight - 30;
+
+    // 가상의 클릭 이벤트 생성 및 전달
+    const clickEvent = new MouseEvent("click", {
+      bubbles: true,
+      cancelable: true,
+      clientX: window.innerWidth / 2, // 화면 중앙으로 가정
+      clientY: targetY, // 스크롤 위치와 관계없이 뷰포트 기준
+    });
+
+    // 스크롤을 먼저 맨 아래로 이동
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: "smooth",
+    });
+
+    // 스크롤이 완료된 후에 클릭 이벤트를 발생
+    setTimeout(() => {
+      window.dispatchEvent(clickEvent);
+    }, 500); // 500ms는 적절한 시간으로 조정 가능
+  };
+
+  // const handleClick = (event: MouseEvent) => {
+  //   // const container = containerRef.current;
+  //   // if (!container) return;
+
+  //   const { clientY } = event;
+  //   const scrollBottom =
+  //     document.documentElement.scrollHeight - window.innerHeight;
+
+  //   // 클릭 영역을 페이지 맨 아래에서 위로 30px로 설정
+  //   const clickAreaBottom = scrollBottom - 30;
+  //   const clickAreaTop = scrollBottom;
+
+  //   if (clientY >= clickAreaBottom && clientY <= clickAreaTop) {
+  //     console.log("Clicked within 30px from the bottom!");
+  //     // alert("Clicked within 30px from the bottom!");
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   window.addEventListener("click", handleClick);
+  //   return () => window.removeEventListener("click", handleClick);
+  // }, []);
+
+  /** =============================================================================== */
+  const adRef = useRef<HTMLDivElement>(null);
 
   return (
     <div className="main_content">
@@ -568,6 +621,9 @@ const ResultPage = () => {
                 <TypingEffect
                   data={randomData}
                   onComplete={handleTypingComplete}
+                  // isShowAllResult={isShowAllResult}
+                  // setIsShowAllResult={setIsShowAllResult}
+                  // handleShowResult={handleShowResult}
                 />
                 {isShowEmojis && (
                   <div className="description_emoji_wrapper">
@@ -632,6 +688,10 @@ const ResultPage = () => {
         >
           made by songtak
         </span>
+      </div>
+      <div style={{ fontSize: "8px", color: "#d1d1d1" }}>
+        이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를
+        제공받습니다.
       </div>
       <CoupangAd id={826966} trackingCode="AF3245048" width="300" height="60" />
       {/* {isMobile() ? (
