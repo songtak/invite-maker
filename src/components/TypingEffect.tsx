@@ -23,12 +23,15 @@ const TypingEffect: React.FC<TypingEffectProps> = ({ data, onComplete }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleShowResult = () => {
-    setIsShowAllResult(true);
+    setActiveIndex(activeIndex + 1);
+    setCurrentIndex(currentIndex + 1);
     window.open(
       "https://link.coupang.com/a/b6k87x",
       "_blank",
       "noopener, noreferrer"
     );
+    setIsAdOpen(false);
+    setIsShowAllResult(true);
   };
 
   useEffect(() => {
@@ -41,9 +44,9 @@ const TypingEffect: React.FC<TypingEffectProps> = ({ data, onComplete }) => {
       setTypedText((prev) => [...prev, description]);
 
       const timer = setTimeout(() => {
-        if (currentIndex === 1) {
+        if (currentIndex === 1 && !isShowAllResult) {
           setIsAdOpen(true);
-        } else {
+        } else if (currentIndex < data.length - 1) {
           setCurrentIndex((prev) => prev + 1);
         }
       }, 800);
@@ -53,20 +56,9 @@ const TypingEffect: React.FC<TypingEffectProps> = ({ data, onComplete }) => {
   }, [currentIndex, data, isAdOpen, isShowAllResult]);
 
   useEffect(() => {
-    if (isShowAllResult && currentIndex === 1) {
-      const timer = setTimeout(() => {
-        setCurrentIndex((prev) => prev + 1);
-        setIsAdOpen(false);
-      }, 800);
-
-      return () => clearTimeout(timer);
-    }
-  }, [isShowAllResult, currentIndex]);
-
-  useEffect(() => {
     if (onComplete) {
-      activeIndex === 4 && onComplete();
-      activeIndex === 5 && onComplete();
+      currentIndex === 4 && onComplete();
+      currentIndex === 5 && onComplete();
     }
   }, [onComplete, activeIndex]);
 
@@ -84,9 +76,7 @@ const TypingEffect: React.FC<TypingEffectProps> = ({ data, onComplete }) => {
 
       return () => clearTimeout(timer);
     }
-  }, [activeIndex, typedText.length]);
-
-  // https://link.coupang.com/a/b6k87x
+  }, [activeIndex, typedText.length, currentIndex]);
 
   return (
     <div ref={containerRef} className="">
