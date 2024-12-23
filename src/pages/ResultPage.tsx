@@ -27,6 +27,7 @@ import { stringLength } from "@firebase/util";
 import { introduction } from "../assets/introduction";
 
 import TypingEffect from "../components/TypingEffect";
+import CoupangAd from "../components/common/CoupangAd";
 
 type Emoji = {
   id: number;
@@ -632,7 +633,8 @@ const ResultPage = () => {
           made by songtak
         </span>
       </div>
-      {isMobile() ? (
+      <CoupangAd id={826966} trackingCode="AF3245048" width="300" height="60" />
+      {/* {isMobile() ? (
         <div ref={scriptElement} style={{ width: "-webkit-fill-available" }}>
           <ins
             className="kakao_ad_area"
@@ -652,7 +654,7 @@ const ResultPage = () => {
             data-ad-height="90"
           />
         </div>
-      )}
+      )} */}
       {/* 다운로드용 이미지가 화면에 안보이도록 설정 */}
       <div className="save_image_hide">{signatureImageHtml()}</div>
       {/* <div className="">{signatureImageHtml()}</div> */}
