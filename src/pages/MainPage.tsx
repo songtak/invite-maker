@@ -12,6 +12,8 @@ import "dayjs/locale/ko";
 import dayjs from "dayjs";
 import _ from "lodash";
 
+import CoupangAd from "../components/common/CoupangAd";
+
 const MainPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -209,8 +211,13 @@ const MainPage = () => {
             made by songtak
           </span>
         </div>
-
-        {isMobile() ? (
+        <CoupangAd
+          id={826966}
+          trackingCode="AF3245048"
+          width="300"
+          height="60"
+        />
+        {/* {isMobile() ? (
           <div ref={scriptElement}>
             <ins
               className="kakao_ad_area"
@@ -230,7 +237,7 @@ const MainPage = () => {
               data-ad-height="90"
             />
           </div>
-        )}
+        )} */}
       </div>
     </>
   );
