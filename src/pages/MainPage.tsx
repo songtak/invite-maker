@@ -114,15 +114,20 @@ const MainPage = () => {
       <div className="main_content">
         <div className="page_wrapper">
           <div className="title-wrapper">
-            <div
-              className="title"
-              style={{ paddingBottom: "14px", paddingTop: "20px" }}
-            >
-              🫧 2025 🐍
-            </div>
             <div>
-              <div className="title_sub">나에게</div>
-              <div className="title_sub">일어날 좋은 일들!</div>
+              <div
+                className="title_sub"
+                style={{ fontSize: "1.2rem", fontWeight: "400" }}
+              >
+                이모지로 알아보는
+              </div>
+              <div
+                className="title"
+                style={{ paddingBottom: "14px", paddingTop: "1px" }}
+              >
+                🫧 2025 🐍
+              </div>
+              <div className="title_sub">나에게 일어날 일들!</div>
             </div>
           </div>
 
