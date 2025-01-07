@@ -160,7 +160,7 @@ const MainPage = () => {
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
                   label="생년월일"
-                  defaultValue={today.subtract(31, "year")}
+                  defaultValue={today.subtract(32, "year")}
                   value={selectedDate === null ? null : dayjs(selectedDate)}
                   onChange={(newValue: any) => {
                     setSelectedDate(dayjs(newValue).format("YYYY-MM-DD"));
