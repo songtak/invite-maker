@@ -31,9 +31,7 @@ const TypingEffect: React.FC<TypingEffectProps> = ({ data, onComplete }) => {
     setTypedText((prev) => [...prev, description]);
 
     const timer = setTimeout(() => {
-      if (currentIndex === 1) {
-        setIsAdOpen(true);
-      } else if (currentIndex < data.length - 1) {
+      if (currentIndex < data.length - 1) {
         setCurrentIndex((prev) => prev + 1);
       }
     }, 800);
