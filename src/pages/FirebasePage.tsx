@@ -18,31 +18,35 @@ const FirebasePage = () => {
   const filteredDocs: any = [];
 
   // 모든 문서를 가져옴
-  getDocs(resultsRef)
-    .then((snapshot) => {
-      if (snapshot.empty) {
-        console.log("No documents found.");
-        return;
-      }
-
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        // check_date 필드의 앞 10자리가 '2025-01-07'인지 확인
-        if (data.check_date && data.check_date.startsWith("2025-01-07")) {
-          filteredDocs.push({ id: doc.id, data: data });
-          setDataList(filteredDocs);
+  if (dataList.length === 0) {
+    getDocs(resultsRef)
+      .then((snapshot) => {
+        if (snapshot.empty) {
+          console.log("No documents found.");
+          return;
         }
-      });
 
-      if (filteredDocs.length > 0) {
-        // console.log("Filtered documents:", filteredDocs);
-      } else {
-        console.log("No documents match the date '2025-01-07'.");
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching documents: ", error);
-    });
+        snapshot.forEach((doc) => {
+          const data = doc.data();
+          // check_date 필드의 앞 10자리가 '2025-01-07'인지 확인
+          if (data.check_date && data.check_date.startsWith("2025-01-07")) {
+            filteredDocs.push({ id: doc.id, data: data });
+            setDataList(filteredDocs);
+          }
+        });
+
+        if (filteredDocs.length > 0) {
+          // console.log("Filtered documents:", filteredDocs);
+        } else {
+          console.log("No documents match the date '2025-01-07'.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching documents: ", error);
+      });
+  }
+
+  console.log("dataList", dataList);
 
   return (
     <>
