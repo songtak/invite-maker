@@ -235,7 +235,8 @@ const ResultPage = () => {
 
     const file = new File(
       [u8arr],
-      `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`,
+      `이모지로 보는 2025년 긍정 파워!`,
+      // `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`,
       { type: mime }
     );
 
@@ -253,7 +254,7 @@ const ResultPage = () => {
       try {
         await navigator.share({
           title: "🫧2025 나에게 일어날 좋은 일들🐍",
-          text: "이모지로 보는 ${nameParam}의 2025년 긍정 파워!",
+          text: `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`,
           // files: [file],
           url: window.location.href,
         });

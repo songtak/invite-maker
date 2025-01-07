@@ -6,6 +6,7 @@ import ResultPage from "@pages/ResultPage";
 import JwPage from "@pages/JwPage";
 import LoginPage from "@pages/LoginPage";
 import AuthTestPage from "@pages/AuthTestPage";
+import FirebasePage from "@pages/FirebasePage";
 import AuthLayout from "@/components/layouts/AuthLayout";
 
 /** 기본 라우터 */
@@ -32,6 +33,11 @@ const authRoutes: RouteObject[] = [
   {
     path: "/for-jw",
     element: <JwPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/data-220107",
+    element: <FirebasePage />,
     errorElement: <ErrorPage />,
   },
   {
