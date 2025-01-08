@@ -65,8 +65,6 @@ const ResultPage = () => {
 
   const [saveChatData, setSaveChatData] = useState<string>("");
 
-  const [isShowAllResult, setIsShowAllResult] = useState<boolean>(false);
-
   const searchParams = new URLSearchParams(location.search.slice(1));
   const nameParam = searchParams.get("name");
   const dateParam = searchParams.get("date");
@@ -211,51 +209,23 @@ const ResultPage = () => {
   };
   // 모바일 공유 함수
   const handleShare = async () => {
-    ///url -> file 변경하는 코드
-    let arr: string[] = resultImage.split(","),
-      //  @ts-ignore
-      mime = arr[0].match(/:(.*?);/)[1],
-      bstr = window.atob(arr[1]),
-      n = bstr.length,
-      u8arr = new Uint8Array(n);
-
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-
-    const file = new File(
-      [u8arr],
-      `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`,
-      { type: mime }
-    );
-
-    // if (navigator.share) {
-    //   navigator.share({
-    //     title: "🫧2025 나에게 일어날 좋은 일들🐍",
-    //     text: `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`,
-    //     files: [file],
-    //   });
-    // } else {
-    //   alert("공유하기가 지원되지 않는 환경 입니다.");
-    // }
-
     if (navigator.share) {
       try {
         await navigator.share({
           title: "🫧2025 나에게 일어날 좋은 일들🐍",
-          text: "이모지로 보는 ${nameParam}의 2025년 긍정 파워!",
-          // files: [file],
+          text: `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`,
           url: window.location.href,
         });
       } catch (error) {
         console.error("공유 실패:", error);
       }
     } else {
-      alert("공유하기 기능을 지원하지 않는 브라우저입니다. 링크를 복사합니다.");
       copyToClipboard();
+      alert("공유하기 기능을 지원하지 않는 브라우저입니다. 링크를 복사합니다.");
     }
   };
 
+  /** 공유하기 버튼 클릭 */
   const handleClickShare = async () => {
     ReactGA.event("공유하기_버튼_클릭", {
       category: "share_button_click",
@@ -307,6 +277,7 @@ const ResultPage = () => {
     }
   };
 
+  /** 송탁 버튼 클릭 */
   const handleClickSongtak = () => {
     ReactGA.event("송탁_버튼_클릭", {
       category: "songtak_button_click",
@@ -522,34 +493,6 @@ const ResultPage = () => {
     ReactGA.send("pageview");
   }, [location]);
   /** =============================================================================== */
-  const handleShowResult = () => {
-    setIsShowAllResult(true);
-    // "결과 보기" 버튼 클릭 시 맨 아래에서 30px 위 지점에 클릭 이벤트 트리거
-    const targetY =
-      document.documentElement.scrollHeight - window.innerHeight - 30;
-
-    // 가상의 클릭 이벤트 생성 및 전달
-    const clickEvent = new MouseEvent("click", {
-      bubbles: true,
-      cancelable: true,
-      clientX: window.innerWidth / 2, // 화면 중앙으로 가정
-      clientY: targetY, // 스크롤 위치와 관계없이 뷰포트 기준
-    });
-
-    // 스크롤을 먼저 맨 아래로 이동
-    window.scrollTo({
-      top: document.documentElement.scrollHeight,
-      behavior: "smooth",
-    });
-
-    // 스크롤이 완료된 후에 클릭 이벤트를 발생
-    setTimeout(() => {
-      window.dispatchEvent(clickEvent);
-    }, 500); // 500ms는 적절한 시간으로 조정 가능
-  };
-
-  /** =============================================================================== */
-  const adRef = useRef<HTMLDivElement>(null);
 
   return (
     <div className="main_content">
