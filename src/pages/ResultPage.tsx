@@ -1,33 +1,23 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
+import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-  runTransaction,
-  addDoc,
-} from "firebase/firestore";
-import { db } from "../../firebaseConfig";
-import _ from "lodash";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import SaveAltIcon from "@mui/icons-material/SaveAlt";
 import domtoimage from "dom-to-image";
 import ReactGA from "react-ga4";
 import dayjs from "dayjs";
-import { getResponseFromGPT } from "../services/api";
+import _ from "lodash";
+
 import { emojiList1 } from "../assets/emojis/emojiList1";
 import { emojiList2 } from "../assets/emojis/emojiList2";
 import { emojiList3 } from "../assets/emojis/emojiList3";
 import { emojiList4 } from "../assets/emojis/emojiList4";
 import { emojiList5 } from "../assets/emojis/emojiList5";
 import { emojiList6 } from "../assets/emojis/emojiList6";
-import { stringLength } from "@firebase/util";
-import { introduction } from "../assets/introduction";
-
-import TypingEffect from "../components/TypingEffect";
+import TypingEffect from "../components/TypingEffectAd";
 import CoupangAd from "../components/common/CoupangAd";
+import { introduction } from "../assets/introduction";
+import { db } from "../../firebaseConfig";
 
 type Emoji = {
   id: number;
@@ -235,8 +225,7 @@ const ResultPage = () => {
 
     const file = new File(
       [u8arr],
-      `이모지로 보는 2025년 긍정 파워!`,
-      // `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`,
+      `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`,
       { type: mime }
     );
 
@@ -254,7 +243,7 @@ const ResultPage = () => {
       try {
         await navigator.share({
           title: "🫧2025 나에게 일어날 좋은 일들🐍",
-          text: `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`,
+          text: "이모지로 보는 ${nameParam}의 2025년 긍정 파워!",
           // files: [file],
           url: window.location.href,
         });
@@ -559,29 +548,6 @@ const ResultPage = () => {
     }, 500); // 500ms는 적절한 시간으로 조정 가능
   };
 
-  // const handleClick = (event: MouseEvent) => {
-  //   // const container = containerRef.current;
-  //   // if (!container) return;
-
-  //   const { clientY } = event;
-  //   const scrollBottom =
-  //     document.documentElement.scrollHeight - window.innerHeight;
-
-  //   // 클릭 영역을 페이지 맨 아래에서 위로 30px로 설정
-  //   const clickAreaBottom = scrollBottom - 30;
-  //   const clickAreaTop = scrollBottom;
-
-  //   if (clientY >= clickAreaBottom && clientY <= clickAreaTop) {
-  //     console.log("Clicked within 30px from the bottom!");
-  //     // alert("Clicked within 30px from the bottom!");
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   window.addEventListener("click", handleClick);
-  //   return () => window.removeEventListener("click", handleClick);
-  // }, []);
-
   /** =============================================================================== */
   const adRef = useRef<HTMLDivElement>(null);
 
@@ -603,10 +569,6 @@ const ResultPage = () => {
               🫧 2025 🐍
             </div>
             <div className="title_sub">{name}에게 일어날 일들!</div>
-
-            {/* <div className="title_sub" style={{ paddingTop: 16 }}>
-              🫧🐍
-            </div> */}
           </div>
         </div>
 
@@ -629,13 +591,9 @@ const ResultPage = () => {
                 style={{ marginBottom: "40px" }}
               >
                 <div className="emoji">{emojis}</div>
-                {/* <div className="emoji">[{emojis}]</div> */}
                 <TypingEffect
                   data={randomData}
                   onComplete={handleTypingComplete}
-                  // isShowAllResult={isShowAllResult}
-                  // setIsShowAllResult={setIsShowAllResult}
-                  // handleShowResult={handleShowResult}
                 />
                 {isShowEmojis && (
                   <div className="description_emoji_wrapper">
@@ -701,10 +659,10 @@ const ResultPage = () => {
           made by songtak
         </span>
       </div>
-      {/* <div style={{ fontSize: "8px", color: "#d1d1d1" }}>
+      <div style={{ fontSize: "8px", color: "#d1d1d1" }}>
         이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를
         제공받습니다.
-      </div> */}
+      </div>
       <CoupangAd id={826966} trackingCode="AF3245048" width="300" height="60" />
       {/* {isMobile() ? (
         <div ref={scriptElement} style={{ width: "-webkit-fill-available" }}>
