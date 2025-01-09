@@ -8,10 +8,15 @@ import {
 import React, { useEffect, useState } from "react";
 
 import { db } from "../../firebaseConfig";
+import dayjs from "dayjs";
 import _ from "lodash";
 
 const FirebasePage = () => {
+  const today = dayjs().format("YYYY-MM-DD");
   const [dataList, setDataList] = useState<any[]>([]);
+  const [selectedDate, setSelectedDate] = useState<string[]>([today]);
+
+  console.log("selectedDate", selectedDate);
 
   // Firestore 인스턴스와 컬렉션 참조를 설정
   const resultsRef = collection(db, "result-list");
@@ -29,7 +34,17 @@ const FirebasePage = () => {
         snapshot.forEach((doc) => {
           const data = doc.data();
           // check_date 필드의 앞 10자리가 '2025-01-07'인지 확인
-          if (data.check_date && data.check_date.startsWith("2025-01-07")) {
+          if (
+            data.check_date &&
+            selectedDate.map((item: string) => {
+              const matched = data.check_date.startsWith(item);
+              console.log("matched", matched === true ? true : undefined);
+
+              return matched === true ? true : undefined;
+            })
+            // (data.check_date.startsWith("2025-01-07") ||
+            //   data.check_date.startsWith("2025-01-08"))
+          ) {
             filteredDocs.push({ id: doc.id, data: data });
             setDataList(filteredDocs);
           }
@@ -45,8 +60,6 @@ const FirebasePage = () => {
         console.error("Error fetching documents: ", error);
       });
   }
-
-  console.log("dataList", dataList);
 
   return (
     <>
