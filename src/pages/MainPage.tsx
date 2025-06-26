@@ -196,14 +196,14 @@ const MainPage = () => {
                 ✨ 알아보자 ✨
               </button>
             </div>
-            <div
+            {/* <div
               className="jw-button"
               onClick={() => {
                 handleClickJw();
               }}
             >
               혹시? 김재웅이신가요?
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="songtak" style={{ paddingTop: "24px" }}>

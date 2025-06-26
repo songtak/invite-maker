@@ -30,11 +30,11 @@ const authRoutes: RouteObject[] = [
     element: <ResultPage />,
     errorElement: <ErrorPage />,
   },
-  {
-    path: "/for-jw",
-    element: <JwPage />,
-    errorElement: <ErrorPage />,
-  },
+  // {
+  //   path: "/for-jw",
+  //   element: <JwPage />,
+  //   errorElement: <ErrorPage />,
+  // },
   {
     path: "/data-220107",
     element: <FirebasePage />,
