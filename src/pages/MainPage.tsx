@@ -29,7 +29,6 @@ const MainPage = () => {
 
   const today = dayjs();
 
-  // http://localhost:5173/
   const handleButtonClick = async () => {
     ReactGA.event("알아보자_버튼_클릭", {
       category: "result_button_click",
@@ -47,15 +46,6 @@ const MainPage = () => {
     if (e.key === "Enter") {
       handleButtonClick();
     }
-  };
-
-  const handleClickJw = () => {
-    navigate("/for-jw");
-    ReactGA.event("째웅_버튼_클릭", {
-      category: "is_jw_button_click",
-      action: "째웅 버튼 클릭",
-      label: name,
-    });
   };
 
   const handleClickSongtak = async () => {
@@ -125,7 +115,7 @@ const MainPage = () => {
                 className="title"
                 style={{ paddingBottom: "14px", paddingTop: "1px" }}
               >
-                🫧 2025 🐍
+                🫧 2026 🐴
               </div>
               <div className="title_sub">나에게 일어날 일들!</div>
             </div>
@@ -196,14 +186,6 @@ const MainPage = () => {
                 ✨ 알아보자 ✨
               </button>
             </div>
-            {/* <div
-              className="jw-button"
-              onClick={() => {
-                handleClickJw();
-              }}
-            >
-              혹시? 김재웅이신가요?
-            </div> */}
           </div>
         </div>
         <div className="songtak" style={{ paddingTop: "24px" }}>

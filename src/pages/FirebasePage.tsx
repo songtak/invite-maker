@@ -33,7 +33,7 @@ const FirebasePage = () => {
 
         snapshot.forEach((doc) => {
           const data = doc.data();
-          // check_date 필드의 앞 10자리가 '2025-01-07'인지 확인
+          // check_date 필드의 앞 10자리가 '2026-01-07'인지 확인
           if (
             data.check_date &&
             selectedDate.map((item: string) => {
@@ -42,8 +42,8 @@ const FirebasePage = () => {
 
               return matched === true ? true : undefined;
             })
-            // (data.check_date.startsWith("2025-01-07") ||
-            //   data.check_date.startsWith("2025-01-08"))
+            // (data.check_date.startsWith("2026-01-07") ||
+            //   data.check_date.startsWith("2026-01-08"))
           ) {
             filteredDocs.push({ id: doc.id, data: data });
             setDataList(filteredDocs);
@@ -53,7 +53,7 @@ const FirebasePage = () => {
         if (filteredDocs.length > 0) {
           // console.log("Filtered documents:", filteredDocs);
         } else {
-          console.log("No documents match the date '2025-01-07'.");
+          console.log("No documents match the date '2026-01-07'.");
         }
       })
       .catch((error) => {

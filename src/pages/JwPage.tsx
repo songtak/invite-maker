@@ -45,7 +45,7 @@ const JwPage = () => {
     <div className="main_content">
       <div className="page_wrapper">
         <div className="title-wrapper">
-          <div className="title">🫧 2025 🐍</div>
+          <div className="title">🫧 2026 🐴</div>
           <div>
             <div className="title_sub">🥰째웅에게</div>
             <div className="title_sub">일어날 좋은 일들!</div>

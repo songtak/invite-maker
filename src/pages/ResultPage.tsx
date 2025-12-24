@@ -69,7 +69,7 @@ const ResultPage = () => {
   const nameParam = searchParams.get("name");
   const dateParam = searchParams.get("date");
 
-  const emojiFiveIntro1 = `이제 ${nameParam}의 2025년을 나타내는` as string;
+  const emojiFiveIntro1 = `이제 ${nameParam}의 2026년을 나타내는` as string;
   const emojiFiveIntro2 = ` 특별한 이모지 다섯 개를 소개할게!` as string;
 
   const getRandomEmojis = (count: number): Emoji[] => {
@@ -212,8 +212,8 @@ const ResultPage = () => {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "🫧2025 나에게 일어날 좋은 일들🐍",
-          text: `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`,
+          title: "🫧2026 나에게 일어날 좋은 일들🐴",
+          text: `이모지로 보는 ${nameParam}의 2026년 긍정 파워!`,
           url: window.location.href,
         });
       } catch (error) {
@@ -239,7 +239,7 @@ const ResultPage = () => {
     }
   };
 
-  const shareString = `이모지로 보는 ${nameParam}의 2025년 긍정 파워!`;
+  const shareString = `이모지로 보는 ${nameParam}의 2026년 긍정 파워!`;
   // const isIOS = /iP(ad|hone|od)/i.test(navigator.userAgent);
   const isAndroid = /Android/i.test(navigator.userAgent);
 
@@ -319,7 +319,7 @@ const ResultPage = () => {
     return (
       <div className="save_image_wrapper" ref={signatureImageRef}>
         <div className="save_image_title" style={{ paddingBottom: "14px" }}>
-          🫧 2025 🐍
+          🫧 2026 🐴
         </div>
         <div style={{ marginBottom: 16 }}>
           <div className="save_image_title_sub">{name}에게</div>
@@ -346,7 +346,7 @@ const ResultPage = () => {
                 marginTop: 32,
               }}
             >
-              2025년 {nameParam}의 키워드
+              2026년 {nameParam}의 키워드
             </div>
             {randomData?.map((item: Emoji, i: number) => (
               <span className="description_emoji pb16 lh" key={item.id}>
@@ -362,7 +362,7 @@ const ResultPage = () => {
           >
             <div
               style={{ color: "#ff8800", fontSize: "14px" }}
-            >{`✨ https://www.emoji2025.site/result?name=${nameParam}&date=${dateParam} ✨`}</div>
+            >{`✨ https://www.emoji2026.site/result?name=${nameParam}&date=${dateParam} ✨`}</div>
             {/* <p className="save_image_chat">{saveChatData}</p> */}
           </div>
           <span
@@ -509,7 +509,7 @@ const ResultPage = () => {
               className="title"
               style={{ paddingBottom: "14px", paddingTop: "8px" }}
             >
-              🫧 2025 🐍
+              🫧 2026 🐴
             </div>
             <div className="title_sub">{name}에게 일어날 일들!</div>
           </div>
@@ -548,7 +548,7 @@ const ResultPage = () => {
                         marginTop: 32,
                       }}
                     >
-                      2025년 {nameParam}의 키워드
+                      2026년 {nameParam}의 키워드
                     </div>
                     {randomData.map((item: Emoji, i: number) => (
                       <span className="description_emoji pb16 lh" key={item.id}>
