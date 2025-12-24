@@ -30,24 +30,38 @@ html {
 }
 
 .lh {
-  line-height: 1.8;
+  line-height: 1.6;
   letter-spacing: 0.2px;
   white-space: pre-line;
+  font-weight: 300;
+}
+
+.chat_font_sm {
+  font-size: small;
 }
 
 .intro_lh {
-  line-height: 1;
+  line-height: 1.35;
   letter-spacing: 0.2px;
   white-space: pre-line;
+  color: rgb(53, 53, 53);
+  font-weight: 300;
 }
 
 .save_image_wrapper {
-  /* height: 800px; */
-  height: fit-content;
   width: 600px;
-  background-color: white;
-  padding: 32px 32px 8px 32px;
+  box-sizing: border-box;
+  background: #fff;
+
+  height: auto;
+  overflow: visible;
+
+  position: relative;
+  overflow: hidden;
+
+  padding: 32px 32px 48px 32px; /* ✅ bottom 8px -> 48px */
 }
+
 .save_image_title {
   font-size: 2rem;
   padding-top: 20px;
@@ -75,12 +89,12 @@ html {
 }
 
 .save_image_hide {
-  position: fixed;
-  top: -100%;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  overflow-y: auto;
+  position: absolute; /* ✅ fixed 금지 */
+  top: 0;
+  left: -99999px; /* ✅ 화면 밖 */
+  width: 600px; /* ✅ 캡처 폭 고정 */
+  height: auto; /* ✅ 100% 금지 */
+  overflow: visible; /* ✅ 잘림 방지 */
 }
 /* =================================================== */
 

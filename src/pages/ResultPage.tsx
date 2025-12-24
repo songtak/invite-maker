@@ -317,71 +317,116 @@ const ResultPage = () => {
         setResultImage(dataUrl);
       })
       .catch((e: any) => {
-        console.log("createResultImage / ERROR", e);
         alert("브라우저에서 지원하지 않습니다.");
+        console.log("createResultImage / ERROR", e);
       });
   }, [signatureImageRef]);
 
   /** 저장용 이미지 html */
   const signatureImageHtml = () => {
     return (
-      <div className="save_image_wrapper" ref={signatureImageRef}>
-        <div className="save_image_title" style={{ paddingBottom: "14px" }}>
-          🫧 2026 🐴
-        </div>
-        <div style={{ marginBottom: 16 }}>
-          <div className="save_image_title_sub">{name}에게</div>
-          <div className="save_image_title_sub">일어날 좋은 일들!</div>
-        </div>
-        <div className="intro_lh">{chatData}</div>
-
-        <div className="save_image_emoji">{emojis}</div>
-
-        <div>
-          <div>
-            {randomData?.map((item: Emoji, i: number) => (
-              <div key={i} className={`lh ${isMobile() ? "pb24" : "pb36"}`}>
-                {item.description}
-              </div>
-            ))}
-          </div>
-          <div className="description_emoji_wrapper">
-            <div
-              className="pb16 lh"
-              style={{
-                fontWeight: 700,
-                fontSize: 18,
-                marginTop: 32,
+      <div className="save_image_wrapper " ref={signatureImageRef}>
+        {/* <div className="common_bg_glow" />
+        <div className="common_bg_blob3" />
+        <div className="common_bg_blob4" /> */}
+        <div
+          className=""
+          // style={{ zIndex: 10, backgroundColor: "rgba(255, 255, 255, 0.9)" }}
+        >
+          <Stack spacing={2} alignItems="center">
+            {/* 작은 캡션 */}
+            <Typography
+              sx={{
+                fontSize: 14,
+                letterSpacing: "0.06em",
+                color: "rgba(0,0,0,0.55)",
+                fontWeight: 600,
               }}
             >
-              2026년 {nameParam}의 키워드
-            </div>
-            {randomData?.map((item: Emoji, i: number) => (
-              <span className="description_emoji pb16 lh" key={item.id}>
-                {`  ${item.emoji}  ${item.symbol} `}
+              이모지로 알아보는
+            </Typography>
 
-                <span style={{ fontWeight: 500 }}>{i < 4 && `   | `}</span>
-              </span>
-            ))}
+            {/* 타이틀 */}
+            <Typography
+              sx={{
+                fontSize: { xs: 40, sm: 46 },
+                fontWeight: 800,
+                letterSpacing: "-0.02em",
+                lineHeight: 1.05,
+              }}
+            >
+              🐴 2026 🫧
+            </Typography>
+
+            <Typography
+              sx={{
+                fontSize: { xs: 18, sm: 20 },
+                color: "rgba(0,0,0,0.72)",
+                fontWeight: 600,
+                letterSpacing: "-0.01em",
+              }}
+            >
+              나에게 일어날 일들!
+            </Typography>
+          </Stack>
+          <div className="chat">
+            <div className="intro_wrapper">
+              <div className="intro_lh">{chatData}</div>
+            </div>
           </div>
-          <div
-            className="songtak"
-            style={{ paddingBottom: "24px", paddingTop: "24px" }}
-          >
+
+          <div className="save_image_emoji">{emojis}</div>
+
+          <div>
+            <div>
+              {randomData?.map((item: Emoji, i: number) => (
+                <div
+                  key={i}
+                  className={`intro_lh ${isMobile() ? "pb16" : "pb36"} ${
+                    isMobile() && "chat_font_sm"
+                  }`}
+                >
+                  {item.description}
+                </div>
+              ))}
+            </div>
+            <div className="description_emoji_wrapper">
+              <div
+                className="pb16 intro_lh"
+                // style={{
+                //   fontWeight: 700,
+                //   fontSize: 18,
+                //   marginTop: 32,
+                // }}
+              >
+                2026년 {nameParam}의 키워드
+              </div>
+              {randomData?.map((item: Emoji, i: number) => (
+                <span className="description_emoji pb16 intro_lh" key={item.id}>
+                  {`  ${item.emoji}  ${item.symbol} `}
+
+                  <span style={{ fontWeight: 500 }}>{i < 4 && `   | `}</span>
+                </span>
+              ))}
+            </div>
             <div
-              style={{ color: "#ff8800", fontSize: "14px" }}
-            >{`✨ https://www.emoji2026.site/result?name=${nameParam}&date=${dateParam} ✨`}</div>
-            {/* <p className="save_image_chat">{saveChatData}</p> */}
+              className="songtak"
+              style={{ paddingBottom: "24px", paddingTop: "24px" }}
+            >
+              <div
+                style={{ color: "#ff8800", fontSize: "14px" }}
+              >{`✨ https://https://www.my-emoji-2026.co.kr/result?name=${nameParam}&date=${dateParam} ✨`}</div>
+            </div>
+            <span
+              style={{
+                color: "#555555",
+                fontSize: "12px",
+                fontWeight: 500,
+              }}
+            >
+              @sn9tk
+            </span>
           </div>
-          <span
-            style={{
-              color: "#555555",
-              fontSize: "12px",
-              fontWeight: 500,
-            }}
-          >
-            @sn9tk
-          </span>
         </div>
       </div>
     );
