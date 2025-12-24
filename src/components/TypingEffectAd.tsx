@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import CoupangAd from "./common/CoupangAd";
 
 interface Emoji {
@@ -15,11 +15,13 @@ interface TypingEffectProps {
 }
 
 const TypingEffectAd: React.FC<TypingEffectProps> = ({ data, onComplete }) => {
-  const [typedText, setTypedText] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isAdOpen, setIsAdOpen] = useState<boolean>(false);
   const [isShowAllResult, setIsShowAllResult] = useState<boolean>(false);
+
+  // 화면에 "active"로 표시될 개수(애니메이션 타이밍용)
   const [activeIndex, setActiveIndex] = useState(0);
+
   const containerRef = useRef<HTMLDivElement>(null);
 
   const isMobile = () => {
@@ -31,7 +33,6 @@ const TypingEffectAd: React.FC<TypingEffectProps> = ({ data, onComplete }) => {
   const isInAppBrowser = (): boolean => {
     const userAgent = navigator.userAgent || navigator.vendor;
 
-    // 주요 인앱 브라우저 User-Agent 패턴 (지속적인 업데이트 필요)
     const inAppBrowserPatterns = [
       /FBAN|FBAV/i, // Facebook
       /Instagram/i, // Instagram
@@ -42,112 +43,88 @@ const TypingEffectAd: React.FC<TypingEffectProps> = ({ data, onComplete }) => {
       /WebView|InAppBrowser/i, // 일반적인 WebView 패턴
     ];
 
-    // User-Agent 검사
     const isUserAgentMatch = inAppBrowserPatterns.some((pattern) =>
       pattern.test(userAgent)
     );
 
-    // 추가적인 검사 (예: document.referrer, 필요하다면 더 추가)
-    const isReferrerMatch = document.referrer.includes("kakao"); // 예시: Kakao
+    const isReferrerMatch = document.referrer.includes("kakao");
 
-    return isUserAgentMatch || isReferrerMatch; // 더 정교한 로직이 필요할 수 있습니다.
+    return isUserAgentMatch || isReferrerMatch;
   };
 
+  // ✅ typedText를 state로 누적하지 않고, currentIndex로부터 파생
+  const visibleTexts = useMemo(() => {
+    if (!data?.length) return [];
+    // currentIndex가 0이면 1개, 1이면 2개 ... 이런 식으로 보여주게
+    const end = Math.min(currentIndex + 1, data.length);
+    return data.slice(0, end).map((d) => d.description);
+  }, [data, currentIndex]);
+
   const handleShowResult = () => {
-    setActiveIndex(activeIndex + 1);
-    setCurrentIndex(currentIndex + 1);
-    // window.open(
-    //   "https://link.coupang.com/a/b6k87x",
-    //   "_blank",
-    //   `${isMobile() ? "popup=yes" : "noopener, noreferrer"}`
-    // );
+    // stale 방지 (함수형 업데이트)
+    setActiveIndex((prev) => prev + 1);
+    setCurrentIndex((prev) => prev + 1);
 
     if (isInAppBrowser()) {
       const currentUrl = window.location.href;
-      // iOS Safari: window.location.assign()을 사용하여 특정 scheme을 열려고 시도하면 Safari가 중단될 수 있습니다.
-      // window.location.assign(currentUrl);
 
-      // 예시: 스킴을 사용하여 열도록 유도 (사용자 경험을 고려하여 적절한 방법 선택)
-      // 주의: 모든 브라우저나 OS에서 지원하는 것은 아닙니다.
       if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
-        // iOS Safari: safari-open://<url> 사용, 안될 경우 우회 방법 적용 필요
-        // window.location.href =
-        //   "safari-open://" + "https://link.coupang.com/a/b6k87x";
-        // // 우회 방법: 사용자에게 링크를 클릭하도록 안내
-        // const link = document.createElement("a");
-        // link.href = "https://link.coupang.com/a/b6k87x";
-        // link.target = "_blank";
-        // link.rel = "noopener noreferrer";
-        // link.innerText = "Open in Browser";
-        // // 스타일 적용 (필요에 따라 수정)
-        // link.style.position = "fixed";
-        // link.style.top = "50%";
-        // link.style.left = "50%";
-        // link.style.transform = "translate(-50%, -50%)";
-        // link.style.padding = "20px";
-        // link.style.backgroundColor = "white";
-        // link.style.border = "1px solid black";
-        // link.style.zIndex = "9999";
-        // link.click();
-        // document.body.appendChild(link);
-        // setIsAdOpen(false);
-        // setIsShowAllResult(true);
+        // 여기 iOS 인앱브라우저 처리 로직은 기존 주석 유지
       } else {
         window.location.href = currentUrl;
-        // setIsAdOpen(false);
-        // setIsShowAllResult(true);
       }
     }
+
     setIsAdOpen(false);
     setIsShowAllResult(true);
-
-    // "noopener, noreferrer"
   };
 
+  // ✅ currentIndex를 "타이핑처럼" 증가시키는 효과
   useEffect(() => {
-    if (currentIndex < data.length) {
-      if (isAdOpen && !isShowAllResult) {
-        return;
+    if (!data?.length) return;
+    if (currentIndex >= data.length) return;
+
+    // 광고 열려있고 전체 결과 보기 전이면 멈춤
+    if (isAdOpen && !isShowAllResult) return;
+
+    const timer = setTimeout(() => {
+      if (currentIndex === 1 && !isShowAllResult) {
+        setIsAdOpen(true);
+      } else if (currentIndex < data.length - 1) {
+        setCurrentIndex((prev) => prev + 1);
       }
+    }, 800);
 
-      const description = data[currentIndex].description;
-      setTypedText((prev) => [...prev, description]);
+    return () => clearTimeout(timer);
+  }, [currentIndex, data?.length, isAdOpen, isShowAllResult]);
 
-      const timer = setTimeout(() => {
-        if (currentIndex === 1 && !isShowAllResult) {
-          setIsAdOpen(true);
-        } else if (currentIndex < data.length - 1) {
-          setCurrentIndex((prev) => prev + 1);
-        }
-      }, 800);
-
-      return () => clearTimeout(timer);
-    }
-  }, [currentIndex, data, isAdOpen, isShowAllResult]);
-
+  // ✅ onComplete: 원래 코드는 activeIndex 의존성인데 currentIndex를 봐야 맞음
   useEffect(() => {
-    if (onComplete) {
-      currentIndex === 4 && onComplete();
-      currentIndex === 5 && onComplete();
-    }
-  }, [onComplete, activeIndex]);
+    if (!onComplete) return;
 
+    // 네 원래 의도(4 또는 5에서 호출)를 그대로 반영
+    if (currentIndex === 4 || currentIndex === 5) {
+      onComplete();
+    }
+  }, [onComplete, currentIndex]);
+
+  // ✅ activeIndex를 천천히 늘려서 fade-in 순서를 제어
   useEffect(() => {
-    if (activeIndex < typedText.length) {
+    if (activeIndex < visibleTexts.length) {
       const timer = setTimeout(() => {
-        setActiveIndex(activeIndex + 1);
+        setActiveIndex((prev) => prev + 1);
       }, 400);
 
       return () => clearTimeout(timer);
     }
-  }, [activeIndex, typedText.length, currentIndex]);
+  }, [activeIndex, visibleTexts.length]);
 
   return (
     <div ref={containerRef} className="">
-      {typedText.map((text, index) => (
+      {visibleTexts.map((text, index) => (
         <div
           key={index}
-          className={`lh ${isMobile() ? "pb24" : "pb36"} fade-in-slide-down ${
+          className={`lh ${isMobile() ? "pb24" : "pb36"}  fade-in-slide-down ${
             index < activeIndex ? "active" : ""
           }`}
         >
@@ -156,33 +133,89 @@ const TypingEffectAd: React.FC<TypingEffectProps> = ({ data, onComplete }) => {
       ))}
 
       {isAdOpen && !isShowAllResult && (
+        // <div>
         <div>
           <div
             style={{
-              marginBottom: "30px",
+              marginBottom: "24px", // 기존 80px → 과함
               marginTop: "16px",
-              fontSize: "30px",
-              letterSpacing: "10px",
+              fontSize: "40px",
+              letterSpacing: "8px",
+              opacity: 0.85,
             }}
           >
-            [ {data[2].emoji} {data[3].emoji} {data[4].emoji} ]
+            [ {data[2]?.emoji} {data[3]?.emoji} {data[4]?.emoji} ]
           </div>
+
           <a
             href="https://link.coupang.com/a/b6k87x"
             target="_blank"
             rel="noopener noreferrer"
+            style={{ textDecoration: "none" }}
           >
             <button
-              style={{ fontSize: "16px" }}
-              className="cute-button"
-              onClick={() => {
-                handleShowResult();
+              onClick={handleShowResult}
+              style={{
+                width: "88%",
+                maxWidth: "340px",
+                padding: "14px 18px",
+                borderRadius: "18px",
+
+                fontSize: "15px",
+                fontWeight: 800,
+                letterSpacing: "0.01em",
+
+                color: "#111",
+                background:
+                  "linear-gradient(180deg, rgba(255,255,255,0.95), rgba(245,245,245,0.9))",
+
+                border: "1px solid rgba(0,0,0,0.12)",
+                boxShadow:
+                  "0 10px 24px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8)",
+
+                cursor: "pointer",
+                transition: "transform 0.18s ease, box-shadow 0.18s ease",
+              }}
+              onMouseDown={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.transform =
+                  "scale(0.99)";
+              }}
+              onMouseUp={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.transform =
+                  "scale(1)";
               }}
             >
-              광고 보고 이어서 확인하기 👀
+              👀 광고 보고 이어서 확인하기
             </button>
           </a>
         </div>
+
+        //   <div
+        //     style={{
+        //       marginBottom: "80px",
+        //       marginTop: "16px",
+        //       fontSize: "30px",
+        //       letterSpacing: "10px",
+        //     }}
+        //   >
+        //     {/* data length 방어 */}[ {data[2]?.emoji} {data[3]?.emoji}{" "}
+        //     {data[4]?.emoji} ]
+        //   </div>
+
+        //   <a
+        //     href="https://link.coupang.com/a/b6k87x"
+        //     target="_blank"
+        //     rel="noopener noreferrer"
+        //   >
+        //     <button
+        //       style={{ fontSize: "16px" }}
+        //       className="cute-button"
+        //       onClick={handleShowResult}
+        //     >
+        //       광고 보고 이어서 확인하기 👀
+        //     </button>
+        //   </a>
+        // </div>
       )}
     </div>
   );

@@ -3,6 +3,14 @@ import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
 import { useLocation, useNavigate } from "react-router-dom";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import SaveAltIcon from "@mui/icons-material/SaveAlt";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  Stack,
+} from "@mui/material";
 import domtoimage from "dom-to-image";
 import ReactGA from "react-ga4";
 import dayjs from "dayjs";
@@ -213,7 +221,7 @@ const ResultPage = () => {
       try {
         await navigator.share({
           title: "🫧2026 나에게 일어날 좋은 일들🐴",
-          text: `이모지로 보는 ${nameParam}의 2026년 긍정 파워!`,
+          text: `이모지로 보는 ${nameParam}의 2026년 일어나 일들!`,
           url: window.location.href,
         });
       } catch (error) {
@@ -239,7 +247,7 @@ const ResultPage = () => {
     }
   };
 
-  const shareString = `이모지로 보는 ${nameParam}의 2026년 긍정 파워!`;
+  const shareString = `이모지로 보는 ${nameParam}의 2026년 일어나 일들!`;
   // const isIOS = /iP(ad|hone|od)/i.test(navigator.userAgent);
   const isAndroid = /Android/i.test(navigator.userAgent);
 
@@ -325,7 +333,7 @@ const ResultPage = () => {
           <div className="save_image_title_sub">{name}에게</div>
           <div className="save_image_title_sub">일어날 좋은 일들!</div>
         </div>
-        <div className="lh">{chatData}</div>
+        <div className="intro_lh">{chatData}</div>
 
         <div className="save_image_emoji">{emojis}</div>
 
@@ -495,34 +503,71 @@ const ResultPage = () => {
   /** =============================================================================== */
 
   return (
-    <div className="main_content">
+    <div className="result_main_content">
       <div className="page_wrapper">
         <div className="title-wrapper">
-          <div>
-            <div
-              className="title_sub"
-              style={{ fontSize: "1.2rem", fontWeight: "400" }}
+          <Stack spacing={2} alignItems="center">
+            {/* 작은 캡션 */}
+            <Typography
+              sx={{
+                fontSize: 14,
+                letterSpacing: "0.06em",
+                color: "rgba(0,0,0,0.55)",
+                fontWeight: 600,
+              }}
             >
               이모지로 알아보는
-            </div>
+            </Typography>
+
+            {/* 타이틀 */}
+            <Typography
+              sx={{
+                fontSize: { xs: 40, sm: 46 },
+                fontWeight: 800,
+                letterSpacing: "-0.02em",
+                lineHeight: 1.05,
+              }}
+            >
+              🐴 2026 🫧
+            </Typography>
+
+            <Typography
+              sx={{
+                fontSize: { xs: 18, sm: 20 },
+                color: "rgba(0,0,0,0.72)",
+                fontWeight: 600,
+                letterSpacing: "-0.01em",
+              }}
+            >
+              나에게 일어날 일들!
+            </Typography>
+          </Stack>
+        </div>
+        {/* <div className="title-wrapper">
+          <div>
             <div
               className="title"
-              style={{ paddingBottom: "14px", paddingTop: "8px" }}
+              style={{
+                fontSize: "2.2rem",
+              }}
             >
               🫧 2026 🐴
             </div>
-            <div className="title_sub">{name}에게 일어날 일들!</div>
+            <div className="title_sub" style={{ fontWeight: "400" }}>
+              이모지로 알아보는
+            </div>
+            <div className="title_sub" style={{ fontWeight: "400" }}>
+              {name}에게 일어날 일들!
+            </div>
           </div>
-        </div>
+        </div> */}
 
         {!_.isNull(randomData) && (
-          <div className="chat ">
+          <div className="chat">
             <div className="intro_wrapper">
-              <div className="lh">{chatData}</div>
+              <div className="intro_lh">{chatData}</div>
               <div className="intro">
-                <div style={{ paddingBottom: "4px", letterSpacing: "0.4px" }}>
-                  {showEmojiFiveIntro1}
-                </div>
+                <div className="intro_lh">{showEmojiFiveIntro1}</div>
                 <div style={{ letterSpacing: "0.4px" }}>
                   {showEmojiFiveIntro2}
                 </div>

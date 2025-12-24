@@ -1,236 +1,384 @@
 @media screen and (max-width: 1023px) {
+  /* ===== Layout reset (모바일에서 50% + padding 25%는 완전 비추) ===== */
   .wrapper {
-    /* text-align: center;
     width: 100%;
-    overflow: visible;
-    min-height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgb(255, 255, 255); */
+    padding: 0;
+    height: auto;
+    min-height: 100vh;
+    display: block;
+    background: transparent; /* 배경은 main_root가 담당 */
     text-align: center;
-    width: 50%;
-    padding-left: 25%;
-    padding-right: 25%;
-    height: 100vh;
-    display: flex;
-    background-color: rgb(255, 255, 255);
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    /* min-width: 300px; */
   }
 
-  .main_content {
-    /* height: calc(100% - 50px); */
-    height: 100%;
-    display: flex;
-    place-items: center;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    overflow: auto;
+  /* ===== Background / page ===== */
+  .main_root {
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+    /* background: #f6f5f2; */
   }
 
-  .main_page_content {
-    margin-top: 20px;
+  .common_bg_glow {
+    position: absolute;
+    inset: -260px;
+    pointer-events: none;
+    overflow: hidden;
+    background: transparent;
+    z-index: 0;
   }
 
-  .main_wrapper {
-    width: 100vw;
-    height: 100vh;
+  /* 공통 블러 처리 */
+  .common_bg_glow::before,
+  .common_bg_glow::after,
+  .common_bg_blob3 {
+    filter: blur(34px) saturate(1.05);
+    opacity: 0.95;
+    will-change: transform;
+  }
+  .common_bg_blob4 {
+    filter: blur(34px) saturate(1.05);
+    opacity: 0.95;
+    will-change: transform;
   }
 
-  .page_wrapper {
+  /* blob 1 – 밝은 소프트 레드 */
+  .common_bg_glow::before {
+    content: "";
+    position: absolute;
+    width: 540px;
+    height: 540px;
+    border-radius: 999px;
+
+    background: radial-gradient(
+      circle at 30% 30%,
+      #e6a15f,
+      rgba(235, 170, 170, 0) 62%
+    );
+
+    top: 6%;
+    left: 8%;
+    animation: blobFloat1 2s ease-in-out infinite alternate;
   }
-  .title-wrapper {
-    margin-top: 40px;
-    margin-bottom: 16px;
+
+  /* blob 2 – 크림슨 레드 */
+  .common_bg_glow::after {
+    content: "";
+    position: absolute;
+    width: 540px;
+    height: 540px;
+    border-radius: 999px;
+
+    background: radial-gradient(
+      circle at 30% 30%,
+      #e6a15f,
+      rgba(180, 60, 75, 0) 64%
+    );
+
+    top: 38%;
+    right: -8%;
+    animation: blobFloat2 6s ease-in-out infinite alternate;
   }
-  .title {
-    padding-bottom: 8px;
-    font-size: 34px;
-    font-weight: 600;
+
+  /* blob 3 – 딥 버건디 (진한 레드) */
+  .common_bg_blob3 {
+    position: absolute;
+    width: 700px;
+    height: 700px;
+    border-radius: 999px;
+
+    background: radial-gradient(
+      circle at 35% 35%,
+      #d46a56,
+      rgba(95, 20, 30, 0) 60%
+    );
+
+    left: 40%;
+    top: 68%;
+    transform: translate(-50%, -50%);
+    animation: blobFloat3 9s ease-in-out infinite alternate;
   }
-  .title_sub {
-    font-size: 22px;
-    font-weight: 500;
-    letter-spacing: 1.4px;
+  /* blob 4 – 딥 버건디 (진한 레드) */
+  .common_bg_blob4 {
+    position: absolute;
+    width: 540px;
+    height: 540px;
+    border-radius: 999px;
+
+    background: radial-gradient(
+      circle at 35% 35%,
+      #d46a56,
+      rgba(95, 20, 30, 0) 60%
+    );
+
+    left: 100%;
+    top: 0%;
+    transform: translate(-50%, -50%);
+    animation: blobFloat4 9s ease-in-out infinite alternate;
   }
-  .chat {
-    padding-left: 8vw;
-    padding-right: 8vw;
-    padding-top: 32px;
-    /* height: 54vh; */
-    /* overflow-y: auto; */
-    /* height: calc(100vh - 55vh); */
+
+  /* 기존 움직임 유지 */
+  @keyframes blobFloat1 {
+    0% {
+      transform: translate3d(-40px, -20px, 0) scale(1.06);
+    }
+    45% {
+      transform: translate3d(120px, 60px, 0) scale(1.14);
+    }
+    100% {
+      transform: translate3d(30px, 160px, 0) scale(1.08);
+    }
   }
-  .intro_wrapper {
+
+  @keyframes blobFloat2 {
+    0% {
+      transform: translate3d(90px, 70px, 0) scale(1.16);
+    }
+    55% {
+      transform: translate3d(-140px, 60px, 0) scale(1.05);
+    }
+    100% {
+      transform: translate3d(-170px, -60px, 0) scale(1.18);
+    }
   }
-  .intro {
-    padding: 48px 0px;
+
+  @keyframes blobFloat3 {
+    0% {
+      transform: translate(-50%, -50%) translate3d(30px, -10px, 0) scale(1.12);
+    }
+    50% {
+      transform: translate(-50%, -50%) translate3d(-80px, 50px, 0) scale(1.04);
+    }
+    100% {
+      transform: translate(-50%, -50%) translate3d(50px, 90px, 0) scale(1.16);
+    }
+  }
+
+  @keyframes blobFloat4 {
+    0% {
+      transform: translate(-50%, -50%) translate3d(30px, -10px, 0) scale(1.12);
+    }
+    50% {
+      transform: translate(-50%, -50%) translate3d(-80px, 50px, 0) scale(1.04);
+    }
+    100% {
+      transform: translate(-50%, -50%) translate3d(50px, 90px, 0) scale(1.16);
+    }
+  }
+
+  /* 접근성 */
+  @media (prefers-reduced-motion: reduce) {
+    .common_bg_glow::before,
+    .common_bg_glow::after,
+    .common_bg_blob3 {
+      animation: none;
+    }
+    .common_bg_blob4 {
+      animation: none;
+    }
   }
 
   .emoji {
+    font-size: 32px;
+    letter-spacing: 0.6em;
     padding-bottom: 40px;
-    font-size: 36px;
-    letter-spacing: 12px;
-    /* padding-top: 24px; */
-    /* padding: 16px; */
   }
 
-  .cute-button {
-    background: linear-gradient(135deg, #000000, #000000);
-    border: none;
-    border-radius: 50px;
-    letter-spacing: 2px;
-
-    padding: 8px 40px;
-    font-size: 1.2rem;
-    /* font-weight: bold; */
-    color: #ffffff;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease-in-out;
-    outline: none;
+  .chat {
+    overflow-y: auto;
+    color: rgba(0, 0, 0, 0.85);
+    font-weight: 300;
+    font-size: 14px;
+    padding: 12px;
+  }
+  .intro_wrapper {
+    margin-top: 20px;
+  }
+  .intro {
+    padding: 32px 28px;
+    font-weight: 500;
   }
 
-  .cute-button:hover {
-    background: linear-gradient(135deg, #000000, #000000);
-    transform: scale(1.1);
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  /* ===== Main content ===== */
+  .main_content {
+    position: relative;
+    min-height: 100vh;
+    display: grid;
+    place-items: start center;
+    margin-top: 12vh;
+    padding: 22px 14px 128px; /* 하단 광고바 + 키보드 여유 */
+    overflow: visible; /* auto로 두면 카드/글로우 잘릴 수 있음 */
   }
 
-  .cute-button:active {
-    transform: scale(0.95);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  .cute-button:disabled {
-    background: linear-gradient(135deg, #888888, #bbbbbb);
-    color: #cccccc;
-    cursor: not-allowed;
-    box-shadow: none;
-    transform: none;
-    text-shadow: none;
-    opacity: 0.6; /* 흐리게 처리 */
+  .result_main_content {
+    position: relative;
+    min-height: 100vh;
+    display: grid;
+    place-items: start center;
+    padding: 22px 14px 128px; /* 하단 광고바 + 키보드 여유 */
+    overflow: visible; /* auto로 두면 카드/글로우 잘릴 수 있음 */
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.5),
+      rgba(255, 255, 255, 0.6)
+    );
   }
 
+  /* 카드 */
+  .hero_card {
+    /* width: min(560px, 80vw); */
+    border-radius: 24px;
+    margin-top: 18px;
+  }
+
+  /* 제목 영역 (기존 title-wrapper 쓰는 페이지도 대응) */
+  .title-wrapper {
+    margin-top: 0;
+    margin-bottom: 14px;
+  }
+  .title {
+    font-size: 40px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    padding-bottom: 8px;
+    padding-top: 0;
+  }
+  .title_sub {
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  /* 구버전 컨테이너들(혹시 남아있으면) */
+  .main_wrapper {
+    width: 100%;
+    height: auto;
+    z-index: 1;
+  }
+  .page_wrapper {
+    width: 100%;
+    z-index: 1;
+  }
+  .main_page_content {
+    margin-top: 0;
+  }
+
+  /* ===== Inputs / Buttons (구버전 클래스 유지 시에도 세련되게) ===== */
   .simple-input {
     width: 100%;
-    max-width: 240px;
-    padding: 10px 15px;
+    max-width: 100%;
+    border-radius: 16px;
+    padding: 14px 14px;
     font-size: 16px;
-    border: 1px solid #000000;
-    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
     outline: none;
-    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   }
 
   .simple-input:focus {
-    border-color: #000000;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    border-color: rgba(0, 0, 0, 0.35);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.08);
   }
 
-  .child {
-    /* z-index: -1; */
-    /* position: absolute;
-    top: 54%;
-    left: 50%;
-    bottom: 24px;
-    transform: translate(-50%, -50%);
-    height: 100vh; */
-  }
-  .child_p {
-    /* margin-top: 80vh; */
-    /* height: fit-content; */
+  .cute-button {
+    width: 100%;
+    max-width: 100%;
+    border: none;
+    border-radius: 16px;
+    padding: 14px 16px;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    color: #fff;
+    cursor: pointer;
+    background: linear-gradient(135deg, #111 0%, #2b2b2b 55%, #111 100%);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
   }
 
+  .cute-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 18px 38px rgba(0, 0, 0, 0.22);
+  }
+
+  .cute-button:active {
+    transform: translateY(0) scale(0.99);
+  }
+
+  .cute-button:disabled {
+    background: rgba(0, 0, 0, 0.12);
+    color: rgba(0, 0, 0, 0.35);
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ===== Footer / credits ===== */
   .songtak {
-    /* position: absolute;
-    top: 96vh;
-    left: 50%;
-    bottom: 24px;
-    transform: translate(-50%, -50%); */
-    margin-bottom: 16px;
+    margin: 14px 0 0;
+    padding-bottom: 6px;
+    color: rgba(0, 0, 0, 0.55);
+    font-weight: 700;
+    font-size: 13px;
   }
+
+  /* ===== Ad bar ===== */
+  .ad_bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 10px 0 calc(env(safe-area-inset-bottom) + 10px);
+    display: flex;
+    justify-content: center;
+    background: linear-gradient(
+      to top,
+      rgba(246, 245, 242, 0.96),
+      rgba(246, 245, 242, 0.65),
+      rgba(246, 245, 242, 0)
+    );
+    backdrop-filter: blur(10px);
+    z-index: 50;
+  }
+
+  /* ===== Small devices ===== */
+  @media (max-width: 380px) {
+    .main_content {
+      padding: 18px 12px 128px;
+    }
+    .hero_card {
+      border-radius: 22px;
+      margin-top: 12px;
+    }
+    .title {
+      font-size: 36px;
+    }
+  }
+
+  /* ===== 100vh 튐 방지 (모바일 주소창) ===== */
+  @supports (height: 100dvh) {
+    .main_root {
+      min-height: 100dvh;
+    }
+    .main_content {
+      min-height: 100dvh;
+    }
+  }
+
+  /* ===== 기존 다른 페이지 요소들 (필요한 것만 최소 유지) ===== */
   .jw {
-    /* overflow-y: auto; */
-    padding-top: 24px;
-    /* max-height: 78vh; */
-    padding-left: 8vw;
-    padding-right: 8vw;
+    padding-top: 16px;
+    padding-left: 6vw;
+    padding-right: 6vw;
   }
   .jw::-webkit-scrollbar {
-    display: none; /* 스크롤바 숨김 */
-  }
-  .jw-button {
-    margin-top: 24px;
-    background: linear-gradient(135deg, #000000, #000000);
-    border: none;
-    letter-spacing: 2px;
-
-    border-radius: 50px;
-    padding: 8px 24px;
-    font-size: 0.6rem;
-    /* font-weight: bold; */
-    color: #ffffff;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease-in-out;
-    outline: none;
-  }
-
-  .jw-button:hover {
-    background: linear-gradient(135deg, #000000, #000000);
-    transform: scale(1.1);
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-  }
-
-  .jw-button:active {
-    transform: scale(0.95);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  .save_icon {
-  }
-  .save_icon:hover {
-    cursor: pointer;
-  }
-
-  .tooltip_wrapper {
-    padding-top: 32px;
-    padding-bottom: 32px;
-  }
-
-  .tooltip {
-    position: relative;
-    display: inline-block;
-    cursor: pointer;
+    display: none;
   }
 
   .tooltip .tooltip-text {
-    visibility: hidden;
-    width: 200px;
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    border-radius: 4px;
-    padding: 5px 10px;
-
-    /* Positioning */
-    position: absolute;
-    z-index: 1;
-    bottom: 125%; /* Position above the element */
-    left: 50%;
-    transform: translateX(-50%);
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  .tooltip:hover .tooltip-text {
-    visibility: visible;
-    opacity: 1;
+    width: 220px;
+    font-size: 12px;
   }
 }

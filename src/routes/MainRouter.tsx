@@ -18,23 +18,17 @@ const MainRouter = () => {
   }, []);
 
   return (
-    <div className="wrapper common">
-      <div className="main_wrapper">
+    <div className="wrapper common main_root ">
+      <div className="common_bg_glow" />
+      <div className="common_bg_blob3" />
+      <div className="common_bg_blob4" />
+
+      <div className="main_wrapper ">
         {/* @ts-ignore */}
         <RouterProvider router={router}>
           <ScrollToTop />
         </RouterProvider>
       </div>
-      {/* <div className="songtak" style={{ marginTop: "24px" }}>
-        <span
-          style={{ cursor: "pointer" }}
-          onClick={() => {
-            window.location.href = "https://instagram.com/sn9tk";
-          }}
-        >
-          made by songtak
-        </span>
-      </div> */}
     </div>
   );
 };

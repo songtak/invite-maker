@@ -7,9 +7,13 @@ html {
   overflow: auto;
 }
 
+.main_root {
+  position: relative;
+  overflow: hidden;
+}
 .common {
   font-family: "Noto Sans KR";
-  background-color: white;
+  /* background-color: rgb(240, 238, 233); */
 }
 
 .pb16 {
@@ -28,6 +32,13 @@ html {
 .lh {
   line-height: 1.8;
   letter-spacing: 0.2px;
+  white-space: pre-line;
+}
+
+.intro_lh {
+  line-height: 1;
+  letter-spacing: 0.2px;
+  white-space: pre-line;
 }
 
 .save_image_wrapper {
