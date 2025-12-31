@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "fetch:riseset": "node ./scripts/fetch_rise_set.mjs",
     "transform:sunrise": "node ./scripts/transform_sunrise_to_coords.mjs",
+    "start:proxy": "node ./scripts/proxy.mjs",
     "deploy": "gh-pages -d dist",
     "postbuild": "cp dist/index.html dist/404.html"
   },

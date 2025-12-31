@@ -225,7 +225,9 @@
   .result_main_content_sunrise {
     position: relative;
     min-height: 100vh;
-    place-items: start center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     padding: 22px 14px 128px; /* 하단 광고바 + 키보드 여유 */
     overflow: visible; /* auto로 두면 카드/글로우 잘릴 수 있음 */
     background: linear-gradient(
@@ -233,6 +235,8 @@
       rgba(255, 255, 255, 0.5),
       rgba(255, 255, 255, 0.6)
     );
+    width: 100%;
+    box-sizing: border-box;
   }
 
   /* 카드 */
