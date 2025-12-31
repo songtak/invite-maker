@@ -3,8 +3,9 @@ import { RouteObject } from "react-router";
 import ErrorPage from "@pages/common/ErrorPage";
 import MainPage from "@pages/MainPage";
 import ResultPage from "@pages/ResultPage";
-import JwPage from "@pages/JwPage";
 import LoginPage from "@pages/LoginPage";
+import LottoPage from "@pages/LottoPage";
+import SunrisePage from "@pages/SunrisePage";
 import AuthTestPage from "@pages/AuthTestPage";
 import FirebasePage from "@pages/FirebasePage";
 import AuthLayout from "@/components/layouts/AuthLayout";
@@ -26,15 +27,20 @@ const authRoutes: RouteObject[] = [
     errorElement: <ErrorPage />,
   },
   {
+    path: "/lotto",
+    element: <LottoPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/sunrise",
+    element: <SunrisePage />,
+    errorElement: <ErrorPage />,
+  },
+  {
     path: "/result",
     element: <ResultPage />,
     errorElement: <ErrorPage />,
   },
-  // {
-  //   path: "/for-jw",
-  //   element: <JwPage />,
-  //   errorElement: <ErrorPage />,
-  // },
   {
     path: "/data-220107",
     element: <FirebasePage />,

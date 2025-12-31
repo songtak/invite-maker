@@ -225,15 +225,15 @@ const ResultPageWithoutAd = () => {
 
     const file = new File(
       [u8arr],
-      `이모지로 보는 2026년 일어나 일들!`,
-      // `이모지로 보는 ${nameParam}의 2026년 일어나 일들!`,
+      `이모지로 보는 2026년 일어날 일들!`,
+      // `이모지로 보는 ${nameParam}의 2026년 일어날 일들!`,
       { type: mime }
     );
 
     // if (navigator.share) {
     //   navigator.share({
     //     title: "🫧2026 나에게 일어날 좋은 일들🐴",
-    //     text: `이모지로 보는 ${nameParam}의 2026년 일어나 일들!`,
+    //     text: `이모지로 보는 ${nameParam}의 2026년 일어닐 일들!`,
     //     files: [file],
     //   });
     // } else {
@@ -244,7 +244,7 @@ const ResultPageWithoutAd = () => {
       try {
         await navigator.share({
           title: "🫧2026 나에게 일어날 좋은 일들🐴",
-          text: `이모지로 보는 ${nameParam}의 2026년 일어나 일들!`,
+          text: `이모지로 보는 ${nameParam}의 2026년 일어날 일들!`,
           // files: [file],
           url: window.location.href,
         });

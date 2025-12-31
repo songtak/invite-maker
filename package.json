@@ -8,6 +8,8 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
+    "fetch:riseset": "node ./scripts/fetch_rise_set.mjs",
+    "transform:sunrise": "node ./scripts/transform_sunrise_to_coords.mjs",
     "deploy": "gh-pages -d dist",
     "postbuild": "cp dist/index.html dist/404.html"
   },
@@ -20,6 +22,7 @@
     "@mui/material": "^6.1.8",
     "@mui/x-date-pickers": "^7.22.3",
     "axios": "^1.6.8",
+    "fast-xml-parser": "^4.2.4",
     "crypto-js": "^4.2.0",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
